@@ -11,20 +11,20 @@ class ExcalidrawCli extends Command {
 
     static args = [
         {
-            name: 'inputdir',
-            description: 'input directory with *.excalidraw files'
+            name: 'input',
+            description: 'input *.excalidraw file / directory'
         },
         {
-            name: 'outputdir',
-            description: 'output directory for PNG images'
+            name: 'output',
+            description: 'output file / directory for PNG images'
         }
     ]
 
     async run() {
         const {args, flags} = this.parse(ExcalidrawCli)
 
-        if (args.inputdir && args.outputdir) {
-            computeExcalidrawDiagrams(args.inputdir, args.outputdir)
+        if (args.input && args.output) {
+            computeExcalidrawDiagrams(args.input, args.output)
         }
     }
 }

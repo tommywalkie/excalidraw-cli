@@ -31,10 +31,11 @@ $ ./bin/run -h
 Parses Excalidraw JSON schemas into PNGs
 
 USAGE
-  $ excalidraw-cli [INPUTDIR] [OUTPUTDIR]
+  $ excalidraw-cli [INPUT] [OUTPUT]
+
 ARGUMENTS
-  INPUTDIR   input directory with *.excalidraw files
-  OUTPUTDIR  output directory for PNG images
+  INPUT   input *.excalidraw file / directory
+  OUTPUT  output file / directory for PNG images
 
 OPTIONS
   -h, --help     show CLI help
@@ -56,21 +57,24 @@ Hopefully, `excalidraw-cli` will use Excalidraw renderer methods and constants o
 - [x] Display **lines**
 - [x] Display **arrows**
 - [x] Display **diamonds**
-- [x] **Rotate** shapes (rectangles, diamonds, etc.)
+- [x] Ability to **rotate** shapes (rectangles, diamonds, etc.)
 - [x] Display **text**
   - [x] **Vigil** font support
-  - [ ] **Cascadia** font support
-  - [ ] **Rotate** text
+  - [x] **Cascadia** font support
+  - [ ] Ability to **rotate** text
 - [x] Display **drawings**
   - [ ] Display **curved** drawings
 - [ ] Add **tests**
+- [ ] **Export** internal renderer as an API
 - [ ] (**_long-term_**) Use Excalidraw renderer **methods** and **constants** directly
 
 **CLI**
 
 - [x] Set up initial **oclif** / **TypeScript** based CLI
+- [x] Handle **directory** as data input
+- [ ] Handle **single file** as data input
 - [ ] Setup **Github Actions** for CI/CD
-- [ ] Provide **demo** on the README
+- [ ] Provide **demo**
 - [ ] Provide better **install** guide
 - [ ] Provide better **usage** guide
 - [ ] Provide other **options** / **flags** ?

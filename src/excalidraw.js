@@ -143,6 +143,7 @@ const getDimensionsFromExcalidraw = json => {
 
 const convertExcalidrawToCanvas = async (json) => {
     registerFont(__dirname + '/fonts/FG_Virgil.ttf', { family: 'Virgil' })
+    registerFont(__dirname + '/fonts/Cascadia.ttf', { family: 'Cascadia' })
     const { maxDimensions, negativeDimensions } = getDimensionsFromExcalidraw(json)
     const negativeWidth = -negativeDimensions[0]
     const negativeHeight = -negativeDimensions[1]

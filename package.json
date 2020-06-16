@@ -1,0 +1,60 @@
+{
+  "name": "excalidraw-cli",
+  "version": "0.0.1",
+  "author": "Tom Bazarnik <tommywalkie@gmail.com>",
+  "bin": {
+    "excalidraw-cli": "./bin/run"
+  },
+  "bugs": {
+    "url": "https://github.com/tommywalkie/excalidraw-cli/issues"
+  },
+  "dependencies": {
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^2",
+    "@types/jest": "^25.2.1",
+    "chalk": "^4.0.0",
+    "jest": "^25.2.7",
+    "meriyah": "^1.9.12",
+    "tslib": "^1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@types/node": "^10",
+    "globby": "^10",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8",
+    "typescript": "^3.3"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/tommywalkie/excalidraw-cli#readme",
+  "keywords": [],
+  "license": "MIT",
+  "main": "index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "excalidraw-cli",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tommywalkie/excalidraw-cli.git"
+  },
+  "scripts": {
+    "postpack": "rimraf oclif.manifest.json",
+    "prepack": "rimraf lib && tsc -b",
+    "test": "jest",
+    "excalidraw-cli": "./bin/run"
+  },
+  "types": "lib/index.d.ts"
+}

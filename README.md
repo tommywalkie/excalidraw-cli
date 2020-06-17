@@ -5,6 +5,10 @@ Parses Excalidraw JSON schemas (`*.excalidraw`) into PNG images (`*.excalidraw.p
 
 This project is a follow-up to [excalidraw#1261](https://github.com/excalidraw/excalidraw/issues/1261) and strives to provide a framework-agnostic CLI for **[excalidraw](https://github.com/excalidraw/excalidraw)**.
 
+![preview](https://raw.githubusercontent.com/tommywalkie/excalidraw-cli/master/.github/assets/demo.gif)
+
+<center><em>Early concept preview (<a href="https://github.com/tommywalkie/excalidraw-cli/blob/master/.github/assets/test.excalidraw">test data source</a>)</em> ⤴️</center>
+
 ## Install
 
 > **Note**: `excalidraw-cli` is still _work-in-progress_. Install process and usage will be improved.
@@ -74,7 +78,7 @@ Hopefully, `excalidraw-cli` will use Excalidraw renderer methods and constants d
 - [x] Set up initial **oclif** / **TypeScript** based CLI
 - [x] Handle **directory** as input
 - [ ] Handle **single file** as input
-- [ ] Provide **demo**
+- [x] Provide **demo**
 - [ ] Provide better **install** guide
 - [ ] Provide better **usage** guide
 - [ ] Release as a **NPM** package

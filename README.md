@@ -42,13 +42,15 @@ OPTIONS
   -v, --version  show CLI version
 ```
 
+## How it works ?
+
+Excalidraw is based on [**Rough.js**](https://roughjs.com/), and internally uses **TypeScript** and **React** to render diagrams. Most of its renderer methods and constants are not exported _yet_ (like [`drawElementOnCanvas()`](https://github.com/excalidraw/excalidraw/blob/046c0818c5b39b78c70646b5f9a1c28f31787694/src/renderer/renderElement.ts#L86-L153)) and rely on the `window` context, which is not usable outside a browser.
+
+To tackle this issue temporarily, `excalidraw-cli` uses **[node-canvas](https://github.com/Automattic/node-canvas)** at its core to generate canvas from Excalidraw JSON schemas (`*.excalidraw`), using a home-made renderer which tries to _mimic_ Excalidraw's as much as possible, using [**Rough.js**](https://roughjs.com/) API primarily, and finally export as PNG images (`*.excalidraw.png`).
+
+Hopefully, `excalidraw-cli` will use Excalidraw renderer methods and constants directly once they are exported by Excalidraw and be able to bring node-canvas' `canvas` context.
+
 ## Roadmap
-
-Excalidraw is based on [**Rough.js**](https://roughjs.com/), and internally uses **TypeScript** and **React** to render diagrams.
-
-Currently, `excalidraw-cli` uses **[oclif](https://github.com/oclif/oclif)** at its core, generates some canvas objects (via **[node-canvas](https://github.com/Automattic/node-canvas)**) from Excalidraw JSON schemas (`*.excalidraw`) and uses a home-made framework-agnostic renderer which tries to _mimic_ Excalidraw's as much as possible without the overhead, using [**Rough.js**](https://roughjs.com/) API primarily, and then export as PNG images (`*.excalidraw.png`).
-
-Hopefully, `excalidraw-cli` will use Excalidraw renderer methods and constants once they are provided by Excalidraw itself.
 
 **Renderer implementation**
 
@@ -61,23 +63,21 @@ Hopefully, `excalidraw-cli` will use Excalidraw renderer methods and constants o
 - [x] Display **text**
   - [x] **Vigil** font support
   - [x] **Cascadia** font support
-  - [ ] Ability to **rotate** text
+  - [ ] Font **ligatures** support
+  - [x] Ability to **rotate** text around itself
 - [x] Display **drawings**
-  - [ ] Display **curved** drawings
 - [ ] Add **tests**
-- [ ] **Export** internal renderer as an API
 - [ ] (**_long-term_**) Use Excalidraw renderer **methods** and **constants** directly
 
 **CLI**
 
 - [x] Set up initial **oclif** / **TypeScript** based CLI
-- [x] Handle **directory** as data input
-- [ ] Handle **single file** as data input
-- [ ] Setup **Github Actions** for CI/CD
+- [x] Handle **directory** as input
+- [ ] Handle **single file** as input
 - [ ] Provide **demo**
 - [ ] Provide better **install** guide
 - [ ] Provide better **usage** guide
-- [ ] Provide other **options** / **flags** ?
+- [ ] Release as a **NPM** package
 
 ## License
 

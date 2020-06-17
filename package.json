@@ -15,6 +15,7 @@
     "@types/jest": "^25.2.1",
     "canvas": "^2.6.1",
     "chalk": "^4.0.0",
+    "cpy-cli": "^3.1.1",
     "roughjs": "^4.3.1",
     "tslib": "^1"
   },
@@ -24,7 +25,6 @@
     "globby": "^10",
     "jest": "^25.2.7",
     "rimraf": "^3.0.2",
-    "ts-node": "^8",
     "typescript": "^3.3"
   },
   "engines": {
@@ -53,7 +53,7 @@
   },
   "scripts": {
     "postpack": "rimraf oclif.manifest.json",
-    "prepack": "rimraf lib && tsc -b",
+    "prepack": "rimraf lib && tsc -b && cpy ./src/fonts ./lib/fonts",
     "test": "jest",
     "excalidraw-cli": "./bin/run"
   },

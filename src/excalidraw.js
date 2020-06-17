@@ -155,6 +155,7 @@ const convertExcalidrawToCanvas = async (json) => {
         let elements = json.elements
         elements.forEach(el => {
             ctx.setLineDash([])
+            ctx.textBaseline = 'middle'
             el.fill = el.backgroundColor
             el.stroke = el.strokeColor
             if (el.strokeStyle == 'dashed') {
@@ -163,20 +164,19 @@ const convertExcalidrawToCanvas = async (json) => {
             if (el.strokeStyle == 'dotted') {
                 ctx.setLineDash([3, 6])
             }
-            if (el.type == 'line') rc.line(el.x + negativeWidth, el.y + negativeHeight, el.x + el.width, el.y + negativeHeight + el.height,
-                el)
+            if (el.type == 'line') {
+                const points = el.points.length ? el.points : [[0, 0]]
+                const shape = [generator.curve(points, el)]
+                const [x1, y1] = [el.x + negativeWidth, el.y + negativeHeight]
+                const [x2, y2, _x3, _y3, _x4, _y4] = getArrowPoints(el, shape)
+                rc.line(x1, y1, x1 + x2, y1 + y2, el)
+            }
             if (el.type == 'draw') {
-                el.points.forEach((pt, index) => {
-                    if (index < el.points.length - 1) {
-                        rc.line(el.x + pt[0] + negativeWidth, el.y + pt[1] + negativeHeight, el.x + el.points[index + 1][
-                            0], el.y + el.points[index + 1][1] + negativeHeight, el)
-                    }
-                })
+                el.fill = 'transparent'
+                rc.curve(el.points.map(pt => [el.x + pt[0], el.y + pt[1]]), el)
             }
             if (el.type == 'arrow') {
-                const points = el.points.length ? el.points : [
-                    [0, 0]
-                ]
+                const points = el.points.length ? el.points : [[0, 0]]
                 const shape = [generator.curve(points, el)]
                 const [x1, y1] = [el.x + negativeWidth, el.y + negativeHeight]
                 const [x2, y2, x3, y3, x4, y4] = getArrowPoints(el, shape)
@@ -203,11 +203,18 @@ const convertExcalidrawToCanvas = async (json) => {
                         [leftXr, leftYr],
                     ], el)
                 } else {
-                    el.fill = 'transparent'
-                    rc.rectangle(el.x + negativeWidth, el.y + negativeHeight, el.width, el.height, el)
-                    el.fill = el.backgroundColor
-                    el.stroke = 'transparent'
+                    let initialStroke = el.stroke
                     ctx.setLineDash([])
+                    el.stroke = 'transparent'
+                    rc.rectangle(el.x + negativeWidth, el.y + negativeHeight, el.width, el.height, el)
+                    el.stroke = initialStroke
+                    el.fill = 'transparent'
+                    if (el.strokeStyle == 'dashed') {
+                        ctx.setLineDash([12, 8])
+                    }
+                    if (el.strokeStyle == 'dotted') {
+                        ctx.setLineDash([3, 6])
+                    }
                     rc.rectangle(el.x + negativeWidth, el.y + negativeHeight, el.width, el.height, el)
                 }
             }
@@ -259,12 +266,23 @@ const convertExcalidrawToCanvas = async (json) => {
             }
             if (el.type == 'text') {
                 let exploded = el.text.split('\n')
-                let totalHeight = el.fontSize * exploded.length + 10 * exploded.length
+                let totalHeight = el.fontSize * exploded.length + el.fontSize * .5 * exploded.length
                 ctx.font = el.fontSize + 'px ' + (el.fontFamily == 1 ? 'Virgil' : el.fontFamily == 2 ? 'Arial' : 'Cascadia')
                 ctx.fillStyle = el.strokeColor
-                exploded.forEach((str, index) => {
-                    ctx.fillText(str, el.x + negativeWidth, el.y + el.height / 2 + negativeHeight - totalHeight / 2 + index * (el.fontSize + 10) + 20)
-                })
+                if (el.angle && el.angle != 0) {
+                    ctx.translate(el.x + negativeWidth + el.width / 2, el.y + negativeHeight + el.height / 2)
+                    ctx.rotate(el.angle)
+                    exploded.forEach((str, index) => {
+                        ctx.fillText(str, -el.width/2, 0 - totalHeight / 2 + index * (el.fontSize + el.fontSize * 0.6) + el.fontSize * 0.2 + el.fontSize * 0.5)
+                    })
+                    ctx.rotate(-el.angle)
+                    ctx.translate(-el.x - negativeWidth - el.width / 2, -el.y - negativeHeight - el.height / 2)
+                }
+                else {
+                    exploded.forEach((str, index) => {
+                        ctx.fillText(str, el.x + negativeWidth, el.y + el.height / 2 + negativeHeight - totalHeight / 2 + index * (el.fontSize + el.fontSize * 0.6) + el.fontSize * 0.2 + el.fontSize * 0.5)
+                    })
+                }
             }
         })
     }

@@ -1,5 +1,4 @@
 import { createCanvas, registerFont } from 'canvas'
-import * as fs from 'fs'
 import * as rough from 'roughjs'
 
 const getCentroid = arr => {
@@ -141,7 +140,7 @@ const getDimensionsFromExcalidraw = json => {
     }
 }
 
-const convertExcalidrawToCanvas = async (json) => {
+export const convertExcalidrawToCanvas = async json => {
     registerFont(__dirname + '/fonts/FG_Virgil.ttf', { family: 'Virgil' })
     registerFont(__dirname + '/fonts/Cascadia.ttf', { family: 'Cascadia' })
     const { maxDimensions, negativeDimensions } = getDimensionsFromExcalidraw(json)
@@ -290,16 +289,3 @@ const convertExcalidrawToCanvas = async (json) => {
 
     return canvas
 }
-
-export const computeExcalidrawDiagrams = async (inputDir, outputDir) => {
-    fs.readdirSync(inputDir).forEach(async function(file) {
-        if (file.match(/\.excalidraw$/) !== null) {
-            let json = JSON.parse(fs.readFileSync(inputDir + '/' + file, 'utf8'))
-            let canvas = await convertExcalidrawToCanvas(json)
-            let stream = canvas.createPNGStream()
-            let out = fs.createWriteStream(outputDir + '/' + file + '.png')
-            stream.pipe(out)
-        }
-    })
-}
-

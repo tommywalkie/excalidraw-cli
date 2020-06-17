@@ -1,31 +1,22 @@
 import { Command, flags } from '@oclif/command'
-import { computeExcalidrawDiagrams } from './excalidraw'
+import { computeUserInputs } from './compute'
 
 class ExcalidrawCli extends Command {
     static description = 'Parses Excalidraw JSON schemas into PNGs'
 
     static flags = {
         version: flags.version({char: 'v'}),
-        help: flags.help({char: 'h'})
+        help: flags.help({char: 'h'}),
+        // silent: flags.boolean({ char: 's', description: 'disable console outputs' })
     }
 
     static args = [
-        {
-            name: 'input',
-            description: 'input *.excalidraw file / directory'
-        },
-        {
-            name: 'output',
-            description: 'output file / directory for PNG images'
-        }
+        { name: 'input', description: 'Excalidraw file path / directory path' },
+        { name: 'output', description: 'Output PNG file path / directory path' }
     ]
 
     async run() {
-        const {args, flags} = this.parse(ExcalidrawCli)
-
-        if (args.input && args.output) {
-            computeExcalidrawDiagrams(args.input, args.output)
-        }
+        computeUserInputs(this.parse(ExcalidrawCli))
     }
 }
 

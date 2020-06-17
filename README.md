@@ -15,35 +15,22 @@ This project is a follow-up to [excalidraw#1261](https://github.com/excalidraw/e
 
 ## Install
 
-> **Note**: `excalidraw-cli` is still _work-in-progress_. Install process and usage will be improved.
-
 ```bash
-# Clone the repo
-git clone https://github.com/tommywalkie/excalidraw-cli.git
-cd excalidraw-cli
-
-# Install dependencies
-npm install
-
-# Compile TypeScript source
-npm run prepack
-
-# Use the CLI
-./bin/run
+npm install -g @tommywalkie/excalidraw-cli
 ```
 
 ## Usage
 
 ```bash
-$ ./bin/run -h
+$ excalidraw-cli -h
 Parses Excalidraw JSON schemas into PNGs
 
 USAGE
   $ excalidraw-cli [INPUT] [OUTPUT]
 
 ARGUMENTS
-  INPUT   input *.excalidraw file / directory
-  OUTPUT  output file / directory for PNG images
+  INPUT   Excalidraw file path / directory path
+  OUTPUT  Output PNG file path / directory path
 
 OPTIONS
   -h, --help     show CLI help
@@ -81,11 +68,11 @@ Hopefully, `excalidraw-cli` will use Excalidraw renderer methods and constants d
 
 - [x] Set up initial **oclif** / **TypeScript** based CLI
 - [x] Handle **directory** as input
-- [ ] Handle **single file** as input
+- [x] Handle **single file** as input
 - [x] Provide **demo**
-- [ ] Provide better **install** guide
+- [x] Release as a **NPM** package
+- [x] Provide better **install** guide
 - [ ] Provide better **usage** guide
-- [ ] Release as a **NPM** package
 
 ## License
 

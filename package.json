@@ -1,6 +1,6 @@
 {
   "name": "@tommywalkie/excalidraw-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Tom Bazarnik <tommywalkie@gmail.com>",
   "bin": {
     "excalidraw-cli": "./bin/run"
@@ -42,7 +42,6 @@
   "license": "MIT",
   "main": "index.js",
   "oclif": {
-    "commands": "./lib/commands",
     "bin": "excalidraw-cli",
     "plugins": [
       "@oclif/plugin-help"

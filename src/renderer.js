@@ -9,17 +9,7 @@ const getCentroid = arr => {
     return [cx, cy];
 }
 
-const rotate = (x1, y1, x2, y2, angle) =>
-    // 𝑎′𝑥=(𝑎𝑥−𝑐𝑥)cos𝜃−(𝑎𝑦−𝑐𝑦)sin𝜃+𝑐𝑥
-    // 𝑎′𝑦=(𝑎𝑥−𝑐𝑥)sin𝜃+(𝑎𝑦−𝑐𝑦)cos𝜃+𝑐𝑦.
-    // https://math.stackexchange.com/questions/2204520/how-do-i-rotate-a-line-segment-in-a-specific-point-on-the-line
-    [
-        (x1 - x2) * Math.cos(angle) - (y1 - y2) * Math.sin(angle) + x2,
-        (x1 - x2) * Math.sin(angle) + (y1 - y2) * Math.cos(angle) + y2,
-    ]
-
-const rotatePolygonPoints = (originX, originY, pointX, pointY, angle) => {
-    angle = angle * Math.PI / 180.0;
+const rotate = (originX, originY, pointX, pointY, angle) => {
     return [
         Math.cos(angle) * (pointX - originX) - Math.sin(angle) * (pointY - originY) + originX,
         Math.sin(angle) * (pointX - originX) + Math.cos(angle) * (pointY - originY) + originY
@@ -90,9 +80,8 @@ const getArrowPoints = (element, shape) => {
     const ys = y2 - ny * minSize;
 
     const angle = 20; // degrees
-    const [x3, y3] = rotate(xs, ys, x2, y2, (-angle * Math.PI) / 180);
-    const [x4, y4] = rotate(xs, ys, x2, y2, (angle * Math.PI) / 180);
-
+    const [x3, y3] = rotate(x2, y2, xs, ys, (-angle * Math.PI) / 180);
+    const [x4, y4] = rotate(x2, y2, xs, ys, (angle * Math.PI) / 180);
     return [x2, y2, x3, y3, x4, y4];
 }
 
@@ -185,17 +174,17 @@ export const convertExcalidrawToCanvas = async json => {
                 rc.line(x1 + x2, y1 + y2, x1 + x4, y1 + y4, el)
             }
             if (el.type == 'rectangle') {
-                if (el.angle) {
+                if (el.angle && el.angle != 0) {
                     const [cx, cy] = getCentroid([
                         [el.x + negativeWidth, el.y + negativeHeight],
                         [el.x + el.width + negativeWidth, el.y + negativeHeight],
                         [el.x + el.width + negativeWidth, el.y + negativeHeight + el.height],
                         [el.x + negativeWidth, el.y + negativeHeight + el.height],
                     ])
-                    const [topXr, topYr] = rotatePolygonPoints(cx, cy, el.x + negativeWidth, el.y + negativeHeight, (180 * el.angle) / Math.PI)
-                    const [rightXr, rightYr] = rotatePolygonPoints(cx, cy, el.x + el.width + negativeWidth, el.y + negativeHeight, (180 * el.angle) / Math.PI)
-                    const [bottomXr, bottomYr] = rotatePolygonPoints(cx, cy, el.x + el.width + negativeWidth, el.y + el.height + negativeHeight, (180 * el.angle) / Math.PI)
-                    const [leftXr, leftYr] = rotatePolygonPoints(cx, cy, el.x + negativeWidth, el.y + el.height + negativeHeight, (180 * el.angle) / Math.PI)
+                    const [topXr, topYr] = rotate(cx, cy, el.x + negativeWidth, el.y + negativeHeight, el.angle)
+                    const [rightXr, rightYr] = rotate(cx, cy, el.x + el.width + negativeWidth, el.y + negativeHeight, el.angle)
+                    const [bottomXr, bottomYr] = rotate(cx, cy, el.x + el.width + negativeWidth, el.y + el.height + negativeHeight, el.angle)
+                    const [leftXr, leftYr] = rotate(cx, cy, el.x + negativeWidth, el.y + el.height + negativeHeight, el.angle)
                     rc.polygon([
                         [topXr, topYr],
                         [rightXr, rightYr],
@@ -237,17 +226,17 @@ export const convertExcalidrawToCanvas = async json => {
                     leftX,
                     leftY,
                 ] = getDiamondPoints(el)
-                if (el.angle) {
+                if (el.angle && el.angle != 0) {
                     const [cx, cy] = getCentroid([
                         [el.x + topX + negativeWidth, el.y + negativeHeight + topY],
                         [el.x + rightX + negativeWidth, el.y + negativeHeight + rightY],
                         [el.x + bottomX + negativeWidth, el.y + negativeHeight + bottomY],
                         [el.x + leftX + negativeWidth, el.y + negativeHeight + leftY],
                     ])
-                    const [topXr, topYr] = rotatePolygonPoints(cx, cy, el.x + topX + negativeWidth, el.y + topY + negativeHeight, (180 * el.angle) / Math.PI)
-                    const [rightXr, rightYr] = rotatePolygonPoints(cx, cy, el.x + rightX + negativeWidth, el.y + rightY + negativeHeight, (180 * el.angle) / Math.PI)
-                    const [bottomXr, bottomYr] = rotatePolygonPoints(cx, cy, el.x + bottomX + negativeWidth, el.y + bottomY + negativeHeight, (180 * el.angle) / Math.PI)
-                    const [leftXr, leftYr] = rotatePolygonPoints(cx, cy, el.x + leftX + negativeWidth, el.y + leftY + negativeHeight, (180 * el.angle) / Math.PI)
+                    const [topXr, topYr] = rotate(cx, cy, el.x + topX + negativeWidth, el.y + topY + negativeHeight, el.angle)
+                    const [rightXr, rightYr] = rotate(cx, cy, el.x + rightX + negativeWidth, el.y + rightY + negativeHeight, el.angle)
+                    const [bottomXr, bottomYr] = rotate(cx, cy, el.x + bottomX + negativeWidth, el.y + bottomY + negativeHeight, el.angle)
+                    const [leftXr, leftYr] = rotate(cx, cy, el.x + leftX + negativeWidth, el.y + leftY + negativeHeight, el.angle)
 
                     rc.polygon([
                         [topXr, topYr],

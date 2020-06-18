@@ -7,7 +7,7 @@ class ExcalidrawCli extends Command {
     static flags = {
         version: flags.version({char: 'v'}),
         help: flags.help({char: 'h'}),
-        // silent: flags.boolean({ char: 's', description: 'disable console outputs' })
+        // quiet: flags.boolean({ char: 'q', description: 'disable console outputs' })
     }
 
     static args = [

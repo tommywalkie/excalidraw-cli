@@ -1,4 +1,5 @@
 # excalidraw-cli
+![npm version](https://img.shields.io/npm/v/@tommywalkie/excalidraw-cli)
 
 Experimental Excalidraw CLI tool.
 
@@ -42,7 +43,7 @@ Hopefully, `excalidraw-cli` will directly use Excalidraw renderer methods (like 
 
 See the related issue thread [excalidraw#1780](https://github.com/excalidraw/excalidraw/issues/1780).
 
-### Caveats
+#### Caveats
 
 The currently used home-made renderer now supports any Excalidraw shape element but it's not perfect, there are still a few known issues :
 - Rotated objects can sometimes exceed canvas dimensions if too close of one side

@@ -4,7 +4,7 @@ Experimental Excalidraw CLI tool.
 
 Parses Excalidraw JSON schemas (`*.excalidraw`) into PNGs (`*.excalidraw.png`).
 
-This project is a follow-up to [excalidraw#1261](https://github.com/excalidraw/excalidraw/issues/1261) and strives to provide a framework-agnostic CLI for **[excalidraw](https://github.com/excalidraw/excalidraw)**.
+This project is a follow-up to [excalidraw#1261](https://github.com/excalidraw/excalidraw/issues/1261) and strives to provide a CLI for **[excalidraw](https://github.com/excalidraw/excalidraw)**.
 
 ![demo](https://raw.githubusercontent.com/tommywalkie/excalidraw-cli/master/.github/assets/demo.gif)
 
@@ -42,44 +42,11 @@ Hopefully, `excalidraw-cli` will directly use Excalidraw renderer methods (like 
 
 See the related issue thread [excalidraw#1780](https://github.com/excalidraw/excalidraw/issues/1780).
 
-## Roadmap
+### Caveats
 
-**Renderer implementation**
-
-- [x] Display **rectangles**
-  - [x] Ability to **rotate** rectangles
-- [x] Display **ellipses**
-  - [x] Ability to **rotate** ellipses
-- [x] Display **lines**
-- [x] Display **arrows**
-- [x] Display **diamonds**
-  - [x] Ability to **rotate** diamonds
-- [x] Display **text**
-  - [x] **Vigil** font support
-  - [x] **Cascadia** font support
-  - [ ] Font **ligatures** support
-  - [x] Ability to **rotate** text
-  - [x] **Multi-line** text support
-    - [ ] Ability to **rotate** multi-line text
-- [x] Display **drawings**
-  - [x] Ability to **rotate** drawings
-- [ ] Add **tests**
-- [ ] (**_long-term_**) Use **Excalidraw renderer** directly
-
-**CLI**
-
-- [x] Set up initial **oclif** / **TypeScript** based CLI
-- [x] Handle **directory** as input
-- [x] Handle **single file** as input
-- [x] Provide **demo**
-- [x] Release as a **NPM** package
-- [x] Provide **install** and **usage** guide
-
-**Third-party integrations**
-- [ ] Consider releasing a **plugin** for **Rollup**
-  - [ ] Provide **install** and **usage** guide
-- [ ] Consider releasing a custom **transformer** for **gatsby-remark-embedder**
-  - [ ] Provide **install** and **usage** guide
+The currently used home-made renderer now supports any Excalidraw shape element but it's not perfect, there are still a few known issues :
+- Rotated objects can sometimes exceed canvas dimensions if too close of one side
+- Font ligatures are not supported yet
 
 ## License
 

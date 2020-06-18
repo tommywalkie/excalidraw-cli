@@ -72,32 +72,51 @@ const getArrowPoints = (element, shape) => {
 }
 
 const getDiamondPoints = element => {
-    const topX = Math.floor(element.width / 2) + 1;
-    const topY = 0;
-    const rightX = element.width;
-    const rightY = Math.floor(element.height / 2) + 1;
-    const bottomX = topX;
-    const bottomY = element.height;
-    const leftX = topY;
-    const leftY = rightY;
-    return [topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY];
+    const topX = Math.floor(element.width / 2) + 1
+    const topY = 0
+    const rightX = element.width
+    const rightY = Math.floor(element.height / 2) + 1
+    const bottomX = topX
+    const bottomY = element.height
+    const leftX = topY
+    const leftY = rightY
+    return [topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY]
 }
+
+const getCentroidFromRegularShape = (el, negativeHeight, negativeWidth) => {
+    return getCentroid([
+        [el.x + negativeWidth, el.y + negativeHeight],
+        [el.x + el.width + negativeWidth, el.y + negativeHeight],
+        [el.x + el.width + negativeWidth, el.y + negativeHeight + el.height],
+        [el.x + negativeWidth, el.y + negativeHeight + el.height],
+    ])
+}
+
+const getCircumferenceFromRectangle = el => 2 * (el.height + el.width)
 
 const getDimensionsFromExcalidraw = json => {
     let maxWidth = 200
     let maxHeight = 200
     let negativeWidth = 0
     let negativeHeight = 0
+    let minX, minY
     if (json && json.elements) {
-        json.elements.forEach(el => {
-            if (el.x < negativeWidth) {
-                negativeWidth = el.x
+        json.elements.forEach((el, index) => {
+            if (index == 0) {
+                minX = el.x
+                minY = el.y
             }
-            if (el.y < negativeHeight) {
-                negativeHeight = el.y
-            }
+            if (el.x < negativeWidth) negativeWidth = el.x
+            if (el.y < negativeHeight) negativeHeight = el.y
+            if (el.x < minX) minX = el.x
+            if (el.y < minY) minY = el.y
         })
+        if (negativeWidth >= 0) negativeWidth = minX
+        if (negativeHeight >= 0) negativeHeight = minY
+        negativeWidth = negativeWidth - 50
+        negativeHeight = negativeHeight - 50
         json.elements.forEach(el => {
+            el.circumference = getCircumferenceFromRectangle(el)
             if (el.x + el.width + (0 - negativeWidth) > maxWidth) {
                 maxWidth = Number(el.x + el.width + (0 - negativeWidth))
             }
@@ -105,6 +124,8 @@ const getDimensionsFromExcalidraw = json => {
                 maxHeight = Number(el.y + el.height + (0 - negativeHeight))
             }
         })
+        maxWidth = maxWidth + 50
+        maxHeight = maxHeight + 50
     }
     return {
         maxDimensions: [maxWidth, maxHeight],
@@ -112,7 +133,7 @@ const getDimensionsFromExcalidraw = json => {
     }
 }
 
-const getFontFamilyFromId = id => id == 1 ? 'Virgil' : id == 2 ? 'Arial' : 'Cascadia'
+export const getFontFamilyFromId = id => id == 1 ? 'Virgil' : id == 2 ? 'Arial' : 'Cascadia'
 
 export const convertExcalidrawToCanvas = async json => {
     registerFont(__dirname + '/fonts/FG_Virgil.ttf', { family: 'Virgil' })
@@ -124,13 +145,12 @@ export const convertExcalidrawToCanvas = async json => {
     const rc = rough.canvas(canvas)
     const generator = rc.generator
     const ctx = canvas.getContext("2d")
-    // Generate diagram background 
     rc.rectangle(
         0,
         0,
         maxDimensions[0],
         maxDimensions[1],
-        { fill: json.appState.viewBackgroundColor, fillStyle: 'solid' }
+        { fill: json.appState.viewBackgroundColor, fillStyle: 'solid', stroke: 'transparent' }
     )
     if (json && json.elements) {
         let elements = json.elements
@@ -151,12 +171,7 @@ export const convertExcalidrawToCanvas = async json => {
             if (el.type == 'draw') {
                 el.fill = 'transparent'
                 if (el.angle && el.angle != 0) {
-                    const [cx, cy] = getCentroid([
-                        [el.x + negativeWidth, el.y + negativeHeight],
-                        [el.x + el.width + negativeWidth, el.y + negativeHeight],
-                        [el.x + el.width + negativeWidth, el.y + negativeHeight + el.height],
-                        [el.x + negativeWidth, el.y + negativeHeight + el.height],
-                    ])
+                    const [cx, cy] = getCentroidFromRegularShape(el, negativeHeight, negativeWidth)
                     el.points = el.points.map(pt => rotate(cx, cy, el.x + pt[0], el.y + pt[1], el.angle))
                     rc.curve(el.points.map(pt => [pt[0], pt[1]]), el)
                 } else {
@@ -174,12 +189,7 @@ export const convertExcalidrawToCanvas = async json => {
             }
             if (el.type == 'rectangle') {
                 if (el.angle && el.angle != 0) {
-                    const [cx, cy] = getCentroid([
-                        [el.x + negativeWidth, el.y + negativeHeight],
-                        [el.x + el.width + negativeWidth, el.y + negativeHeight],
-                        [el.x + el.width + negativeWidth, el.y + negativeHeight + el.height],
-                        [el.x + negativeWidth, el.y + negativeHeight + el.height],
-                    ])
+                    const [cx, cy] = getCentroidFromRegularShape(el, negativeHeight, negativeWidth)
                     const [topXr, topYr] = rotate(cx, cy, el.x + negativeWidth, el.y + negativeHeight, el.angle)
                     const [rightXr, rightYr] = rotate(cx, cy, el.x + el.width + negativeWidth, el.y + negativeHeight, el.angle)
                     const [bottomXr, bottomYr] = rotate(cx, cy, el.x + el.width + negativeWidth, el.y + el.height + negativeHeight, el.angle)
@@ -245,34 +255,10 @@ export const convertExcalidrawToCanvas = async json => {
                         [el.x + bottomX + negativeWidth, el.y + negativeHeight + bottomY],
                         [el.x + leftX + negativeWidth, el.y + negativeHeight + leftY],
                     ])
-                    const [topXr, topYr] = rotate(
-                        cx,
-                        cy,
-                        el.x + topX + negativeWidth,
-                        el.y + topY + negativeHeight,
-                        el.angle
-                    )
-                    const [rightXr, rightYr] = rotate(
-                        cx,
-                        cy,
-                        el.x + rightX + negativeWidth,
-                        el.y + rightY + negativeHeight,
-                        el.angle
-                    )
-                    const [bottomXr, bottomYr] = rotate(
-                        cx,
-                        cy,
-                        el.x + bottomX + negativeWidth,
-                        el.y + bottomY + negativeHeight,
-                        el.angle
-                    )
-                    const [leftXr, leftYr] = rotate(
-                        cx,
-                        cy,
-                        el.x + leftX + negativeWidth,
-                        el.y + leftY + negativeHeight,
-                        el.angle
-                    )
+                    const [topXr, topYr] = rotate(cx, cy, el.x + topX + negativeWidth, el.y + topY + negativeHeight, el.angle)
+                    const [rightXr, rightYr] = rotate(cx, cy, el.x + rightX + negativeWidth, el.y + rightY + negativeHeight, el.angle)
+                    const [bottomXr, bottomYr] = rotate(cx, cy, el.x + bottomX + negativeWidth, el.y + bottomY + negativeHeight, el.angle)
+                    const [leftXr, leftYr] = rotate(cx, cy, el.x + leftX + negativeWidth, el.y + leftY + negativeHeight, el.angle)
                     rc.polygon([
                         [topXr, topYr],
                         [rightXr, rightYr],

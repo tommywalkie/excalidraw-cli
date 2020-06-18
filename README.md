@@ -20,15 +20,15 @@ npm install -g @tommywalkie/excalidraw-cli
 ## Usage
 
 ```bash
-$ excalidraw-cli -h
+$ excalidraw-cli --help
 Parses Excalidraw JSON schemas into PNGs
 
 USAGE
-  $ excalidraw-cli INPUT [OUTPUT]
+  $ excalidraw-cli [INPUT] [OUTPUT]
 
 ARGUMENTS
-  INPUT   Excalidraw file path / directory path
-  OUTPUT  [default: ./] Output PNG file path / directory path
+  INPUT   [default: {cwd}] Excalidraw file path / directory path
+  OUTPUT  [default: {cwd}] Output PNG file path / directory path
 
 OPTIONS
   -h, --help     show CLI help

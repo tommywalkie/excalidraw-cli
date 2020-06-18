@@ -68,17 +68,8 @@ export const retrieveDataFromExcalidraw = async path => {
 
 export const retrieveExcalidrawFilesFromDirectory = async path => {
     try {
-        const files = await fs.readdir(path)
-        if (files) {
-            const res = await Promise.all(
-                files.map(async file => {
-                    if (file.match(/\.excalidraw$/) !== null) {
-                        return file
-                    }
-                })
-            )
-            if (res) return res
-        }
+        const files = await fs.readdir((path == process.cwd() ? __dirname : path))
+        if (files) return files.filter(file => file.match(/\.excalidraw$/) !== null)
     } catch (error) {
         console.error('Some error occured when trying to analyze <' + path + '> directory. Cannot process request.')
         console.error(error)
@@ -86,17 +77,24 @@ export const retrieveExcalidrawFilesFromDirectory = async path => {
 }
 
 export const computeUserInputs = async ({ args, flags }) => {
+    args.input = args.input.replace(/\{cwd\}/g, process.cwd())
+    args.output = args.output.replace(/\{cwd\}/g, process.cwd())
     if (args.input) {
         const inputLstat = await getStatsFromPath(args.input)
-        if (inputLstat && inputLstat.isFile())
-            await generateCanvasAndSaveAsPng(args.input, args.output)
         if (inputLstat && inputLstat.isDirectory()) {
             const excalidrawFiles = await retrieveExcalidrawFilesFromDirectory(args.input)
             if (excalidrawFiles) {
+                if (excalidrawFiles.length == 0)
+                    console.error(`Input directory <${args.input}> has no '*.excalidraw' files.`)
                 excalidrawFiles.forEach(async file => {
                     generateCanvasAndSaveAsPng(args.input + '/' + file, args.output)
                 })
             }
         }
+        if (inputLstat && inputLstat.isFile())
+            await generateCanvasAndSaveAsPng(args.input, args.output)
+    }
+    else {
+        console.error('Please enter a valid path as input.')
     }
 }

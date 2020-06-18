@@ -7,6 +7,7 @@ class ExcalidrawCli extends Command {
     static flags = {
         version: flags.version({char: 'v'}),
         help: flags.help({char: 'h'}),
+        // transparent: flags.boolean({char: 't', description: 'set diagram background to transparent'}),
         // quiet: flags.boolean({ char: 'q', description: 'disable console outputs' })
     }
 
@@ -14,13 +15,14 @@ class ExcalidrawCli extends Command {
         { 
             name: 'input',
             description: 'Excalidraw file path / directory path',
-            required: true
+            required: false,
+            default: '{cwd}'
         },
         { 
             name: 'output',
             description: 'Output PNG file path / directory path',
             required: false,
-            default: './'
+            default: '{cwd}'
         }
     ]
 

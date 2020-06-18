@@ -84,7 +84,3 @@ See the related issue thread [excalidraw#1780](https://github.com/excalidraw/exc
 ## License
 
 MIT
-
-## License
-
-MIT

@@ -172,10 +172,10 @@ export const convertExcalidrawToCanvas = async json => {
                 el.fill = 'transparent'
                 if (el.angle && el.angle != 0) {
                     const [cx, cy] = getCentroidFromRegularShape(el, negativeHeight, negativeWidth)
-                    el.points = el.points.map(pt => rotate(cx, cy, el.x + pt[0], el.y + pt[1], el.angle))
+                    el.points = el.points.map(pt => rotate(cx, cy, el.x + pt[0] + negativeWidth, el.y + pt[1] + negativeHeight, el.angle))
                     rc.curve(el.points.map(pt => [pt[0], pt[1]]), el)
                 } else {
-                    rc.curve(el.points.map(pt => [el.x + pt[0], el.y + pt[1]]), el)
+                    rc.curve(el.points.map(pt => [el.x + pt[0] + negativeWidth, el.y + pt[1] + negativeHeight]), el)
                 }
             }
             if (el.type == 'arrow') {

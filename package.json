@@ -1,6 +1,6 @@
 {
   "name": "@tommywalkie/excalidraw-cli",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Experimental Excalidraw CLI tool",
   "author": "Tom Bazarnik <tommywalkie@gmail.com>",
   "bin": {

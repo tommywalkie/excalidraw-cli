@@ -1,6 +1,6 @@
 {
   "name": "@tommywalkie/excalidraw-cli",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "Tom Bazarnik <tommywalkie@gmail.com>",
   "bin": {
     "excalidraw-cli": "./bin/run"

@@ -11,8 +11,17 @@ class ExcalidrawCli extends Command {
     }
 
     static args = [
-        { name: 'input', description: 'Excalidraw file path / directory path' },
-        { name: 'output', description: 'Output PNG file path / directory path' }
+        { 
+            name: 'input',
+            description: 'Excalidraw file path / directory path',
+            required: true
+        },
+        { 
+            name: 'output',
+            description: 'Output PNG file path / directory path',
+            required: false,
+            default: './'
+        }
     ]
 
     async run() {

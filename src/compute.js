@@ -22,20 +22,20 @@ const saveCanvasAsPng = async (canvas, path, inputFile) => {
                     stream.pipe(out)
                 }
                 if (outputLstat && outputLstat.isDirectory()) {
-                    console.log(`Saving successfully generated canvas as <${path + '/' + inputFile.split('\\').pop().split('/').pop() + '.png'}>...`)
-                    let out = fs.createWriteStream(path + '/' + inputFile.split('\\').pop().split('/').pop() + '.png')
+                    console.log(`Saving successfully generated canvas as <${(path == './' ? '.' : path) + '/' + inputFile.split('\\').pop().split('/').pop() + '.png'}>...`)
+                    let out = fs.createWriteStream((path == './' ? '.' : path) + '/' + inputFile.split('\\').pop().split('/').pop() + '.png')
                     stream.pipe(out)
                 }
             } catch (error) {
-                console.log(`Saving successfully generated canvas as <${path + '.png'}>...`)
-                let out = fs.createWriteStream(path + '.png')
+                console.log(`Saving successfully generated canvas as <${(path == './' ? '.' : path) + '.png'}>...`)
+                let out = fs.createWriteStream((path == './' ? '.' : path) + '.png')
                 stream.pipe(out)
             }
         }
         else {
             console.log(`No output file / directory defined.`)
             console.log(`Saving successfully generated canvas as <${inputFile.split('\\').pop().split('/').pop() + '.png'}> in working directory...`)
-            let out = fs.createWriteStream('./' + inputFile.split('\\').pop().split('/').pop() + '.png')
+            let out = fs.createWriteStream('.' + inputFile.split('\\').pop().split('/').pop() + '.png')
             stream.pipe(out)
         }
         

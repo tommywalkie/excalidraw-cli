@@ -5,13 +5,9 @@ Parses Excalidraw JSON schemas (`*.excalidraw`) into PNG images (`*.excalidraw.p
 
 This project is a follow-up to [excalidraw#1261](https://github.com/excalidraw/excalidraw/issues/1261) and strives to provide a framework-agnostic CLI for **[excalidraw](https://github.com/excalidraw/excalidraw)**.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/tommywalkie/excalidraw-cli/master/.github/assets/demo.gif">
-</p>
+![demo](https://raw.githubusercontent.com/tommywalkie/excalidraw-cli/master/.github/assets/demo.gif)
 
-<p align="center">
-  <em>Early concept preview (<a href="https://github.com/tommywalkie/excalidraw-cli/blob/master/.github/assets/test.excalidraw">test data source</a>)</em> ⤴️
-</p>
+_Early concept preview ([test data source]("https://github.com/tommywalkie/excalidraw-cli/blob/master/.github/assets/test.excalidraw"))_ ⤴️
 
 ## Install
 
@@ -50,17 +46,20 @@ Hopefully, `excalidraw-cli` will use Excalidraw renderer methods and constants d
 **Renderer implementation**
 
 - [x] Display **rectangles**
+  - [x] Ability to **rotate** rectangles
 - [x] Display **ellipses**
+  - [x] Ability to **rotate** ellipses
 - [x] Display **lines**
 - [x] Display **arrows**
 - [x] Display **diamonds**
-- [x] Ability to **rotate** shapes (rectangles, diamonds, etc.)
+  - [x] Ability to **rotate** diamonds
 - [x] Display **text**
   - [x] **Vigil** font support
   - [x] **Cascadia** font support
   - [ ] Font **ligatures** support
   - [x] Ability to **rotate** text around itself
 - [x] Display **drawings**
+  - [x] Ability to **rotate** drawings
 - [ ] Add **tests**
 - [ ] (**_long-term_**) Use Excalidraw renderer **methods** and **constants** directly
 

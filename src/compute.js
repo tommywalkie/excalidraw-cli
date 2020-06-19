@@ -1,58 +1,65 @@
+import * as chalk from 'chalk'
 import * as fs from 'fs-extra'
 import { convertExcalidrawToCanvas } from './renderer'
+import { generateTaskListFromFiles, generateTaskListFromFile } from './worker'
 
-const getStatsFromPath = async path => {
+const getStatsFromPathThatShouldExist = async path => {
     try {
         return await fs.lstat(path)
     } catch (error) {
-        console.error('Path <' + path + '> doesn\'t exist. Cannot process request.')
-        console.error(error)
+        console.error(`  ${chalk.red('×')} Path ${chalk.grey('<')}${chalk.red(path)}${chalk.grey('>')} doesn\'t exist.`)
     }
 }
 
-const saveCanvasAsPng = async (canvas, path, inputFile) => {
+const saveCanvasAsPng = async (canvas, path, inputFile, observer, task) => {
     try {
         const stream = canvas.createPNGStream()
         if (path) {
             try {
                 const outputLstat = await fs.lstat(path)
                 if (outputLstat && outputLstat.isFile()) {
-                    console.log(`Saving successfully generated canvas as <${path + '.png'}>...`)
                     let out = fs.createWriteStream(path + '.png')
                     stream.pipe(out)
+                    if (observer) observer.complete()
+                    if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(path + '.png')}`
                 }
                 if (outputLstat && outputLstat.isDirectory()) {
-                    console.log(`Saving successfully generated canvas as <${(path == './' ? '.' : path) + '/' + inputFile.split('\\').pop().split('/').pop() + '.png'}>...`)
                     let out = fs.createWriteStream((path == './' ? '.' : path) + '/' + inputFile.split('\\').pop().split('/').pop() + '.png')
                     stream.pipe(out)
+                    if (observer) observer.complete()
+                    if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow((path == './' ? '.' : path) + '/' + inputFile.split('\\').pop().split('/').pop() + '.png')}`
                 }
             } catch (error) {
-                console.log(`Saving successfully generated canvas as <${(path == './' ? '.' : path) + '.png'}>...`)
-                let out = fs.createWriteStream((path == './' ? '.' : path) + '.png')
+                let out = fs.createWriteStream(path + '.png')
                 stream.pipe(out)
+                if (observer) observer.complete()
+                if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(path + '.png')}`
             }
         }
         else {
-            console.log(`No output file / directory defined.`)
-            console.log(`Saving successfully generated canvas as <${inputFile.split('\\').pop().split('/').pop() + '.png'}> in working directory...`)
             let out = fs.createWriteStream('.' + inputFile.split('\\').pop().split('/').pop() + '.png')
             stream.pipe(out)
+            if (observer) observer.complete()
+            if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow('.' + inputFile.split('\\').pop().split('/').pop() + '.png')}`
         }
-        
     } catch (error) {
-        console.error('Some error occured when trying to save newly generated canvas as PNG.')
-        console.error(error)
+        if (observer) observer.error(error)
     }
 }
 
-const generateCanvasAndSaveAsPng = async (inputArg, outputArg) => {
-    console.log(`Now processing data from <${inputArg}> file...`)
-    const inputData = await retrieveDataFromExcalidraw(inputArg)
-    if (inputData) {
-        console.log(`Generating canvas, using retrieved data from <${inputArg}> file...`)
-        const generatedCanvas = await convertExcalidrawToCanvas(inputData)
-        if (generatedCanvas)
-            saveCanvasAsPng(generatedCanvas, outputArg, inputArg)
+export const generateCanvasAndSaveAsPng = async (inputArg, outputArg, observer, task) => {
+    try {
+        const inputData = await retrieveDataFromExcalidraw(inputArg)
+        if (inputData) {
+            const generatedCanvas = await convertExcalidrawToCanvas(inputData)
+            if (generatedCanvas) {
+                if (observer)
+                    observer.next('Generated canvas, saving it as PNG...')
+                saveCanvasAsPng(generatedCanvas, outputArg, inputArg, observer, task)
+            }
+        }
+    } catch (error) {
+        if (observer) observer.error(error)
     }
 }
 
@@ -69,7 +76,8 @@ export const retrieveDataFromExcalidraw = async path => {
 export const retrieveExcalidrawFilesFromDirectory = async path => {
     try {
         const files = await fs.readdir((path == process.cwd() ? __dirname : path))
-        if (files) return files.filter(file => file.match(/\.excalidraw$/) !== null)
+        if (files)
+            return files.filter(file => file.match(/\.excalidraw$/) !== null)
     } catch (error) {
         console.error('Some error occured when trying to analyze <' + path + '> directory. Cannot process request.')
         console.error(error)
@@ -79,20 +87,26 @@ export const retrieveExcalidrawFilesFromDirectory = async path => {
 export const computeUserInputs = async ({ args, flags }) => {
     args.input = args.input.replace(/\{cwd\}/g, process.cwd())
     args.output = args.output.replace(/\{cwd\}/g, process.cwd())
+    const quiet = flags.quiet
     if (args.input) {
-        const inputLstat = await getStatsFromPath(args.input)
+        const inputLstat = await getStatsFromPathThatShouldExist(args.input)
         if (inputLstat && inputLstat.isDirectory()) {
             const excalidrawFiles = await retrieveExcalidrawFilesFromDirectory(args.input)
             if (excalidrawFiles) {
                 if (excalidrawFiles.length == 0)
                     console.error(`Input directory <${args.input}> has no '*.excalidraw' files.`)
-                excalidrawFiles.forEach(async file => {
-                    generateCanvasAndSaveAsPng(args.input + '/' + file, args.output)
+                const tasks = generateTaskListFromFiles(excalidrawFiles, args.input, args.output, quiet)
+                tasks.run().catch(err => {
+                    console.error(err)
                 })
             }
         }
-        if (inputLstat && inputLstat.isFile())
-            await generateCanvasAndSaveAsPng(args.input, args.output)
+        else if (inputLstat && inputLstat.isFile()) {
+            const tasks = generateTaskListFromFile(args.input, args.output, quiet)
+            tasks.run().catch(err => {
+                console.error(err)
+            })
+        }
     }
     else {
         console.error('Please enter a valid path as input.')

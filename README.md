@@ -32,6 +32,7 @@ ARGUMENTS
 
 OPTIONS
   -h, --help     show CLI help
+  -q, --quiet    disable console outputs
   -v, --version  show CLI version
 ```
 

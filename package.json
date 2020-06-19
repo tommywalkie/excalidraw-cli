@@ -1,6 +1,6 @@
 {
   "name": "@tommywalkie/excalidraw-cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Experimental Excalidraw CLI tool",
   "author": "Tom Bazarnik <tommywalkie@gmail.com>",
   "bin": {
@@ -17,8 +17,9 @@
     "chalk": "^4.0.0",
     "cpy-cli": "^3.1.1",
     "fs-extra": "^9.0.1",
+    "listr": "^0.14.3",
     "roughjs": "^4.3.1",
-    "tslib": "^1"
+    "rxjs": "^6.5.5"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
@@ -38,7 +39,12 @@
     "/oclif.manifest.json"
   ],
   "homepage": "https://github.com/tommywalkie/excalidraw-cli#readme",
-  "keywords": ["excalidraw", "cli", "canvas", "png"],
+  "keywords": [
+    "excalidraw",
+    "cli",
+    "canvas",
+    "png"
+  ],
   "license": "MIT",
   "main": "index.js",
   "oclif": {

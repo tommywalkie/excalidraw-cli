@@ -169,7 +169,12 @@ export const convertExcalidrawToCanvas = async json => {
                 rc.line(x1, y1, x1 + x2, y1 + y2, el)
             }
             if (el.type == 'draw') {
+                const firstPoint = el.points[0]
+                const lastPoint = el.points[el.points.length - 1]
+                ctx.fillStyle = el.strokeColor
                 el.fill = 'transparent'
+                if (firstPoint[0] == lastPoint[0] && firstPoint[1] == lastPoint[1])
+                    el.fill = el.backgroundColor
                 if (el.angle && el.angle != 0) {
                     const [cx, cy] = getCentroidFromRegularShape(el, negativeHeight, negativeWidth)
                     el.points = el.points.map(pt => rotate(cx, cy, el.x + pt[0] + negativeWidth, el.y + pt[1] + negativeHeight, el.angle))
@@ -279,13 +284,14 @@ export const convertExcalidrawToCanvas = async json => {
                 let totalHeight = el.fontSize * exploded.length + el.fontSize * .5 * exploded.length
                 ctx.font = el.fontSize + 'px ' + getFontFamilyFromId(el.fontFamily)
                 ctx.fillStyle = el.strokeColor
+                ctx.textAlign = 'center'
                 if (el.angle && el.angle != 0) {
                     ctx.translate(el.x + negativeWidth + el.width / 2, el.y + negativeHeight + el.height / 2)
                     ctx.rotate(el.angle)
                     exploded.forEach((str, index) => {
                         ctx.fillText(
                             str,
-                            -el.width/2,
+                            0,
                             0 - totalHeight / 2 + index * (el.fontSize + el.fontSize * 0.6) + el.fontSize * 0.2 + el.fontSize * 0.5
                         )
                     })
@@ -299,7 +305,7 @@ export const convertExcalidrawToCanvas = async json => {
                     exploded.forEach((str, index) => {
                         ctx.fillText(
                             str,
-                            el.x + negativeWidth,
+                            el.x + negativeWidth + el.width/2,
                             el.y + el.height / 2 + negativeHeight - totalHeight / 2 + index * (el.fontSize + el.fontSize * 0.6) + el.fontSize * 0.2 + el.fontSize * 0.5)
                     })
                 }

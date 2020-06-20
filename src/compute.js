@@ -3,11 +3,13 @@ import * as fs from 'fs-extra'
 import { convertExcalidrawToCanvas } from './renderer'
 import { generateTaskListFromFiles, generateTaskListFromFile } from './worker'
 
+const formatPath = path => path.replace(/\\/g, '/')
+
 const getStatsFromPathThatShouldExist = async path => {
     try {
         return await fs.lstat(path)
     } catch (error) {
-        console.error(`  ${chalk.red('×')} Path ${chalk.grey('<')}${chalk.red(path)}${chalk.grey('>')} doesn\'t exist.`)
+        console.error(`  ${chalk.red('×')} Path ${chalk.grey('<')}${chalk.red(formatPath(path))}${chalk.grey('>')} doesn\'t exist.`)
     }
 }
 
@@ -18,22 +20,22 @@ const saveCanvasAsPng = async (canvas, path, inputFile, observer, task) => {
             try {
                 const outputLstat = await fs.lstat(path)
                 if (outputLstat && outputLstat.isFile()) {
-                    let out = fs.createWriteStream(path + '.png')
+                    let out = fs.createWriteStream(path.replace(/\.png$/g, '') + '.png')
                     stream.pipe(out)
                     if (observer) observer.complete()
-                    if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(path + '.png')}`
+                    if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(formatPath(path.replace(/\.png$/g, '')) + '.png')}`
                 }
                 if (outputLstat && outputLstat.isDirectory()) {
                     let out = fs.createWriteStream((path == './' ? '.' : path) + '/' + inputFile.split('\\').pop().split('/').pop() + '.png')
                     stream.pipe(out)
                     if (observer) observer.complete()
-                    if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow((path == './' ? '.' : path) + '/' + inputFile.split('\\').pop().split('/').pop() + '.png')}`
+                    if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow((path == './' ? '.' : formatPath(path)) + '/' + inputFile.split('\\').pop().split('/').pop() + '.png')}`
                 }
             } catch (error) {
-                let out = fs.createWriteStream(path + '.png')
+                let out = fs.createWriteStream(path.replace(/\.png$/g, '') + '.png')
                 stream.pipe(out)
                 if (observer) observer.complete()
-                if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(path + '.png')}`
+                if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(formatPath(path.replace(/\.png$/g, '')) + '.png')}`
             }
         }
         else {

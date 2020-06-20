@@ -9,7 +9,7 @@ This project is a follow-up to [excalidraw#1261](https://github.com/excalidraw/e
 
 ![demo](https://raw.githubusercontent.com/tommywalkie/excalidraw-cli/master/.github/assets/demo.gif)
 
-_Early concept preview ([test data source]("https://github.com/tommywalkie/excalidraw-cli/blob/master/.github/assets/test.excalidraw"))_ ⤴️
+_Demo_ ⤴️
 
 ## Install
 

@@ -77,7 +77,7 @@ export const retrieveDataFromExcalidraw = async path => {
 
 export const retrieveExcalidrawFilesFromDirectory = async path => {
     try {
-        const files = await fs.readdir((path == process.cwd() ? __dirname : path))
+        const files = await fs.readdir((path == process.cwd() ? './' : path))
         if (files)
             return files.filter(file => file.match(/\.excalidraw$/) !== null)
     } catch (error) {

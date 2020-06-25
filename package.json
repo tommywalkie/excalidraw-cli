@@ -61,7 +61,7 @@
     "postpack": "rimraf oclif.manifest.json",
     "prepack": "rimraf lib && tsc -b && cpy ./src/fonts ./lib/fonts",
     "test": "jest",
-    "excalidraw-cli": "./bin/run"
+    "excalidraw-cli": "node ./bin/run"
   },
   "types": "lib/index.d.ts"
 }

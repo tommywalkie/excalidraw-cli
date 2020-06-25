@@ -192,8 +192,10 @@ export const convertExcalidrawToCanvas = async json => {
             ctx.textBaseline = 'middle'
             el.fill = el.backgroundColor
             el.stroke = el.strokeColor
-            if (el.strokeStyle == 'dashed') ctx.setLineDash([12, 8])
-            if (el.strokeStyle == 'dotted') ctx.setLineDash([3, 6])
+            if (el.strokeStyle == 'dashed')
+                ctx.setLineDash([12, 8])
+            if (el.strokeStyle == 'dotted')
+                ctx.setLineDash([3, 6])
             if (el.type == 'line') {
                 const points = el.points.length ? el.points : [[0, 0]]
                 const shape = [generator.curve(points, el)]

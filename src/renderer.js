@@ -133,6 +133,26 @@ const getDimensionsFromExcalidraw = json => {
     }
 }
 
+const getFontSise = element => {
+    // If we have a fontSize in the element, use it.
+    if (element.fontSize != null) {
+        return element.fontSize
+    }
+
+    // Try to parse fontSize from the font
+    if (element.font != null) {
+        const value = element.font.split("px")[0]
+        const parsed = parseInt(value, 10)
+        if (!isNaN(parsed)) {
+            return parsed
+        }
+    }
+
+    // Nothing works, return a default value
+    const defaultsTo = 10
+    return defaultsTo
+}
+
 export const getFontFamilyFromId = id => id == 1 ? 'Virgil' : id == 2 ? 'Arial' : 'Cascadia'
 
 export const convertExcalidrawToCanvas = async json => {
@@ -281,8 +301,9 @@ export const convertExcalidrawToCanvas = async json => {
             }
             if (el.type == 'text') {
                 let exploded = el.text.split('\n')
-                let totalHeight = el.fontSize * exploded.length + el.fontSize * .5 * exploded.length
-                ctx.font = el.fontSize + 'px ' + getFontFamilyFromId(el.fontFamily)
+                let fontSize = getFontSise(el)
+                let totalHeight = fontSize * exploded.length + fontSize * .5 * exploded.length
+                ctx.font = fontSize + 'px ' + getFontFamilyFromId(el.fontFamily)
                 ctx.fillStyle = el.strokeColor
                 ctx.textAlign = 'center'
                 if (el.angle && el.angle != 0) {
@@ -292,7 +313,7 @@ export const convertExcalidrawToCanvas = async json => {
                         ctx.fillText(
                             str,
                             0,
-                            0 - totalHeight / 2 + index * (el.fontSize + el.fontSize * 0.6) + el.fontSize * 0.2 + el.fontSize * 0.5
+                            0 - totalHeight / 2 + index * (fontSize + fontSize * 0.6) + fontSize * 0.2 + fontSize * 0.5
                         )
                     })
                     ctx.rotate(-el.angle)
@@ -306,7 +327,7 @@ export const convertExcalidrawToCanvas = async json => {
                         ctx.fillText(
                             str,
                             el.x + negativeWidth + el.width/2,
-                            el.y + el.height / 2 + negativeHeight - totalHeight / 2 + index * (el.fontSize + el.fontSize * 0.6) + el.fontSize * 0.2 + el.fontSize * 0.5)
+                            el.y + el.height / 2 + negativeHeight - totalHeight / 2 + index * (fontSize + fontSize * 0.6) + fontSize * 0.2 + fontSize * 0.5)
                     })
                 }
             }

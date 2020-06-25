@@ -134,26 +134,39 @@ const getDimensionsFromExcalidraw = json => {
 }
 
 const getFontSise = element => {
+    const defaultFontSize = 20
     // If we have a fontSize in the element, use it.
-    if (element.fontSize != null) {
+    if (element.fontSize)
         return element.fontSize
-    }
-
     // Try to parse fontSize from the font
-    if (element.font != null) {
+    if (element.font) {
         const value = element.font.split("px")[0]
         const parsed = parseInt(value, 10)
         if (!isNaN(parsed)) {
             return parsed
         }
     }
-
-    // Nothing works, return a default value
-    const defaultsTo = 10
-    return defaultsTo
+    return defaultFontSize
 }
 
-export const getFontFamilyFromId = id => id == 1 ? 'Virgil' : id == 2 ? 'Arial' : 'Cascadia'
+export const getFontFamilyFromId = id => 
+    id ? id == 1 ? 'Virgil' : id == 2 ? 'Arial' : 'Cascadia' : 'Virgil'
+
+export const getFontFamilyFromElement = element => {
+    if (element.fontFamily)
+        return getFontFamilyFromId(element.fontFamily)
+    if (element.font)
+        return element.font.split("px")[1]
+    return 'Virgil'
+}
+    
+
+export const getFontFromElement = element => {
+    let font = ''
+    font += getFontSise(element) + 'px '
+    font += getFontFamilyFromElement(element)
+    return font
+}
 
 export const convertExcalidrawToCanvas = async json => {
     registerFont(__dirname + '/fonts/FG_Virgil.ttf', { family: 'Virgil' })
@@ -303,7 +316,7 @@ export const convertExcalidrawToCanvas = async json => {
                 let exploded = el.text.split('\n')
                 let fontSize = getFontSise(el)
                 let totalHeight = fontSize * exploded.length + fontSize * .5 * exploded.length
-                ctx.font = fontSize + 'px ' + getFontFamilyFromId(el.fontFamily)
+                ctx.font = getFontFromElement(el)
                 ctx.fillStyle = el.strokeColor
                 ctx.textAlign = 'center'
                 if (el.angle && el.angle != 0) {

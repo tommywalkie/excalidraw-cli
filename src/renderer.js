@@ -177,6 +177,7 @@ export const convertExcalidrawToCanvas = async json => {
     const canvas = createCanvas(maxDimensions[0], maxDimensions[1])
     const rc = rough.canvas(canvas)
     const generator = rc.generator
+    const ctx = canvas.getContext("2d")
     rc.rectangle( 0, 0, maxDimensions[0], maxDimensions[1], { 
         fill: json.appState.viewBackgroundColor,
         fillStyle: 'solid',

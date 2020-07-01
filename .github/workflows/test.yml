@@ -18,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install excalidraw-cli
-      run: sudo yarn global add excalidraw-cli
+      run: sudo yarn global add @tommywalkie/excalidraw-cli
     - name: Prepare test environment
       run: mkdir -p foo/bar
     - name: Test 1

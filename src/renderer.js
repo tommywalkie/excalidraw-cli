@@ -183,7 +183,7 @@ export const convertExcalidrawToCanvas = async json => {
         0,
         maxDimensions[0],
         maxDimensions[1],
-        { fill: json.appState.viewBackgroundColor, fillStyle: 'solid', stroke: 'transparent' }
+        { fill: json.appState.viewBackgroundColor, fillStyle: 'solid', stroke: json.appState.viewBackgroundColor }
     )
     if (json && json.elements) {
         let elements = json.elements

@@ -1,10 +1,6 @@
 name: build
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: push
 
 jobs:
   build:
@@ -17,3 +13,17 @@ jobs:
       run: yarn prepack
     - name: Launch tests
       run: yarn test
+  live-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install excalidraw-cli
+      run: sudo yarn global add excalidraw-cli
+    - name: Prepare test environment
+      run: mkdir -p foo/bar
+    - name: Test 1
+      run: excalidraw-cli .github/assets/ foo
+    - name: Test 2
+      run: excalidraw-cli .github/assets/ ./foo/bar
+    - name: Test 3
+      run: excalidraw-cli .github/assets/ foo/bar

@@ -38,7 +38,9 @@ const saveCanvasAsPng = async (canvas, pathArg, inputFile, observer, task) => {
                 if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(finalPath)}`
             }
         } catch (error) {
-            let finalPath = path.join(pathArg + '.png')
+            let extension = path.extname(pathArg);
+            let file = path.basename(inputFile,extension)
+            let finalPath = path.join(pathArg, file + '.png')
             console.log("finalPath = " + finalPath, " / pathArg = " + pathArg);
             let out = fs.createWriteStream(finalPath)
             stream.pipe(out)

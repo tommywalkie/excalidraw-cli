@@ -13,12 +13,3 @@ jobs:
       run: yarn prepack
     - name: Launch tests
       run: yarn test
-    - name: Prepare live-test environment
-      run: |
-        mkdir -p foo/bar
-        git clone https://github.com/tommywalkie/blog.git
-        mkdir -p static/img
-    - name: Test 1
-      run: yarn excalidraw-cli blog/client/src/excalidraw blog/client/static/img
-    - name: Test 2
-      run: ls blog/client/static/img

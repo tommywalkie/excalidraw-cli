@@ -14,7 +14,10 @@ jobs:
     - name: Launch tests
       run: yarn test
     - name: Prepare live-test environment
-      run: mkdir -p foo/bar
+      run: |
+        mkdir -p foo/bar
+        git clone https://github.com/tommywalkie/blog.git
+        mkdir -p static/img
     - name: Test 1
       run: yarn excalidraw-cli .github/assets/
     - name: Test 2

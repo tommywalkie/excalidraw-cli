@@ -1,10 +1,6 @@
 name: build
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: push
 
 jobs:
   build:
@@ -17,3 +13,13 @@ jobs:
       run: yarn prepack
     - name: Launch tests
       run: yarn test
+    - name: Prepare live-test environment
+      run: mkdir -p foo/bar
+    - name: Test 1
+      run: yarn excalidraw-cli .github/assets/
+    - name: Test 2
+      run: yarn excalidraw-cli .github/assets/ foo
+    - name: Test 3
+      run: yarn excalidraw-cli .github/assets/ ./foo/bar
+    - name: Test 4
+      run: yarn excalidraw-cli .github/assets/ foo/bar

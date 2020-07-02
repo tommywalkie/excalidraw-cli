@@ -20,3 +20,5 @@ jobs:
         mkdir -p static/img
     - name: Test 1
       run: yarn excalidraw-cli blog/client/src/excalidraw blog/client/static/img
+    - name: Test 2
+      run: ls blog/client/static/img

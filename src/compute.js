@@ -1,5 +1,6 @@
 import * as chalk from 'chalk'
 import * as fs from 'fs-extra'
+import * as path from 'path'
 import { convertExcalidrawToCanvas } from './renderer'
 import { generateTaskListFromFiles, generateTaskListFromFile } from './worker'
 
@@ -13,36 +14,31 @@ const getStatsFromPathThatShouldExist = async path => {
     }
 }
 
-const saveCanvasAsPng = async (canvas, path, inputFile, observer, task) => {
+const saveCanvasAsPng = async (canvas, pathArg, inputFile, observer, task) => {
     try {
         const stream = canvas.createPNGStream()
-        if (path) {
-            try {
-                const outputLstat = await fs.lstat(path)
-                if (outputLstat && outputLstat.isFile()) {
-                    let out = fs.createWriteStream(path.replace(/\.png$/g, '') + '.png')
-                    stream.pipe(out)
-                    if (observer) observer.complete()
-                    if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(formatPath(path.replace(/\.png$/g, '')) + '.png')}`
-                }
-                if (outputLstat && outputLstat.isDirectory()) {
-                    let out = fs.createWriteStream((path == './' ? '.' : path) + '/' + inputFile.split('\\').pop().split('/').pop() + '.png')
-                    stream.pipe(out)
-                    if (observer) observer.complete()
-                    if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow((path == './' ? '.' : formatPath(path)) + '/' + inputFile.split('\\').pop().split('/').pop() + '.png')}`
-                }
-            } catch (error) {
-                let out = fs.createWriteStream(path.replace(/\.png$/g, '') + '.png')
+        try {
+            const outputLstat = await fs.lstat(pathArg)
+            if (outputLstat && outputLstat.isDirectory()) {
+                let finalPath = path.join(pathArg, inputFile.split('\\').pop().split('/').pop() + '.png')
+                let out = fs.createWriteStream(finalPath)
                 stream.pipe(out)
                 if (observer) observer.complete()
-                if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(formatPath(path.replace(/\.png$/g, '')) + '.png')}`
+                if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(finalPath)}`
             }
-        }
-        else {
-            let out = fs.createWriteStream('.' + inputFile.split('\\').pop().split('/').pop() + '.png')
+            if (outputLstat && outputLstat.isFile()) {
+                let finalPath = path.join(inputFile.split('\\').pop().split('/').pop().replace(/\.png$/g, '') + '.png')
+                let out = fs.createWriteStream(finalPath)
+                stream.pipe(out)
+                if (observer) observer.complete()
+                if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(finalPath)}`
+            }
+        } catch (error) {
+            let finalPath = path.join(pathArg.replace(/\.png$/g, '') + '.png')
+            let out = fs.createWriteStream(finalPath)
             stream.pipe(out)
             if (observer) observer.complete()
-            if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow('.' + inputFile.split('\\').pop().split('/').pop() + '.png')}`
+            if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(finalPath)}`
         }
     } catch (error) {
         if (observer) observer.error(error)

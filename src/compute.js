@@ -23,7 +23,7 @@ const saveCanvasAsPng = async (canvas, pathArg, inputFile, observer, task) => {
                 let extension = path.extname(pathArg);
                 let file = path.basename(inputFile,extension)
                 let finalPath = path.join(pathArg, file + '.png')
-                console.log(finalPath, file, inputFile, extension, pathArg);
+                console.log(finalPath, file, inputFile, pathArg);
                 let out = fs.createWriteStream(finalPath)
                 stream.pipe(out)
                 if (observer) observer.complete()

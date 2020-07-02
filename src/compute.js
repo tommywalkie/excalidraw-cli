@@ -42,6 +42,12 @@ const saveCanvasAsPng = async (canvas, pathArg, inputFile, observer, task) => {
             let file = path.basename(inputFile,extension)
             let finalPath = path.join(pathArg, file + '.png')
             console.log("finalPath = " + finalPath, " / pathArg = " + pathArg);
+            fs.writeFile(finalPath, '', function(err) {
+                if(err) {
+                    console.log(err);
+                }
+                console.log("The file was saved!");
+            })
             let dataURL = canvas.toDataURL()
             let data = dataURL.replace(/^data:image\/\w+;base64,/, "")
             let buf = new Buffer(data, 'base64');

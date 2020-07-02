@@ -19,10 +19,4 @@ jobs:
         git clone https://github.com/tommywalkie/blog.git
         mkdir -p static/img
     - name: Test 1
-      run: yarn excalidraw-cli .github/assets/
-    - name: Test 2
-      run: yarn excalidraw-cli .github/assets/ foo
-    - name: Test 3
-      run: yarn excalidraw-cli .github/assets/ ./foo/bar
-    - name: Test 4
-      run: yarn excalidraw-cli .github/assets/ foo/bar
+      run: yarn excalidraw-cli client/src/excalidraw client/static/img

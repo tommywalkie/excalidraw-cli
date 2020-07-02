@@ -20,21 +20,29 @@ const saveCanvasAsPng = async (canvas, pathArg, inputFile, observer, task) => {
         try {
             const outputLstat = await fs.lstat(pathArg)
             if (outputLstat && outputLstat.isDirectory()) {
-                let finalPath = path.join(pathArg, inputFile.split('\\').pop().split('/').pop() + '.png')
+                let extension = path.extname(pathArg);
+                let file = path.basename(inputFile,extension)
+                let finalPath = path.join(pathArg, file + '.png')
+                console.log(pathArg);
+                console.log(finalPath);
                 let out = fs.createWriteStream(finalPath)
                 stream.pipe(out)
                 if (observer) observer.complete()
                 if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(finalPath)}`
             }
             if (outputLstat && outputLstat.isFile()) {
-                let finalPath = path.join(inputFile.split('\\').pop().split('/').pop().replace(/\.png$/g, '') + '.png')
+                let finalPath = path.join(pathArg.replace(/\.png$/g, '') + '.png')
+                console.log(finalPath);
                 let out = fs.createWriteStream(finalPath)
                 stream.pipe(out)
                 if (observer) observer.complete()
                 if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(finalPath)}`
             }
         } catch (error) {
-            let finalPath = path.join(pathArg.replace(/\.png$/g, '') + '.png')
+            let extension = path.extname(pathArg);
+            let file = path.basename(pathArg,extension)
+            let finalPath = path.join(pathArg, file + '.png')
+            console.log(finalPath);
             let out = fs.createWriteStream(finalPath)
             stream.pipe(out)
             if (observer) observer.complete()

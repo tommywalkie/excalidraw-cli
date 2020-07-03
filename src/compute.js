@@ -3,6 +3,7 @@ import * as fs from 'fs-extra'
 import * as path from 'path'
 import { convertExcalidrawToCanvas } from './renderer'
 import { generateTaskListFromFiles, generateTaskListFromFile } from './worker'
+import readdirRecursive from 'fs-readdir-recursive'
 
 const formatPath = path => path.replace(/\\/g, '/')
 
@@ -112,3 +113,5 @@ export const computeUserInputs = async ({ args, flags }) => {
         console.error('Please enter a valid path as input.')
     }
 }
+
+export { readdirRecursive }

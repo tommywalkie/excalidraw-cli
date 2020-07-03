@@ -17,32 +17,25 @@ const getStatsFromPathThatShouldExist = async path => {
 const saveCanvasAsPng = async (canvas, pathArg, inputFile, observer, task) => {
     try {
         const stream = canvas.createPNGStream()
-        try {
-            const outputLstat = await fs.lstat(pathArg)
-            if (outputLstat && outputLstat.isDirectory()) {
-                let extension = path.extname(pathArg);
-                let file = path.basename(inputFile,extension)
-                let finalPath = path.join(pathArg, file + '.png')
-                let out = fs.createWriteStream(finalPath)
-                stream.pipe(out)
-                if (observer) observer.complete()
-                if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(finalPath)}`
-            }
-            if (outputLstat && outputLstat.isFile()) {
-                let finalPath = path.join(pathArg.replace(/\.png$/g, '') + '.png')
-                let out = fs.createWriteStream(finalPath)
-                stream.pipe(out)
-                if (observer) observer.complete()
-                if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(finalPath)}`
-            }
-        } catch (error) {
-            let extension = path.extname(pathArg);
-            let file = path.basename(inputFile,extension)
-            let finalPath = path.join(pathArg, file + '.png')
-            let out = fs.createWriteStream(finalPath)
+        const outputPathExt = path.extname(pathArg)
+        const outputFileName = path.basename(pathArg, outputPathExt)
+        if (outputPathExt.length > 0) {
+            let outputFilePath = path.join(path.dirname(pathArg), outputFileName + '.png')
+            let out = fs.createWriteStream(outputFilePath)
             stream.pipe(out)
             if (observer) observer.complete()
-            if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(finalPath)}`
+            if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(outputFilePath)}`
+        } else {
+            fs.mkdir(pathArg, { recursive: true }, (err) => {
+                if (err) throw err;
+                const inputFileExt = path.extname(inputFile);
+                const outputFile = path.basename(inputFile,inputFileExt)
+                let outputFilePath = path.join(pathArg, outputFile + '.png')
+                let out = fs.createWriteStream(outputFilePath)
+                stream.pipe(out)
+                if (observer) observer.complete()
+                if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(outputFilePath)}`
+            })
         }
     } catch (error) {
         if (observer) observer.error(error)

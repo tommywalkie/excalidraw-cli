@@ -1,6 +1,6 @@
 {
   "name": "@tommywalkie/excalidraw-cli",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Experimental Excalidraw CLI tool",
   "author": "Tom Bazarnik <tommywalkie@gmail.com>",
   "bin": {
@@ -25,7 +25,7 @@
     "@oclif/dev-cli": "^1",
     "@types/jest": "^25.2.1",
     "globby": "^10",
-    "jest": "^25.2.7",
+    "jest": "^26.1.0",
     "rimraf": "^3.0.2",
     "typescript": "^3.3"
   },
@@ -60,8 +60,11 @@
   "scripts": {
     "postpack": "rimraf oclif.manifest.json",
     "prepack": "rimraf lib && tsc -b && cpy ./src/fonts ./lib/fonts",
-    "test": "jest",
+    "test": "npm run prepack && jest",
     "excalidraw-cli": "node ./bin/run"
   },
-  "types": "lib/index.d.ts"
+  "types": "lib/index.d.ts",
+  "jest": {
+    "testRegex": ".spec.js$"
+  }
 }

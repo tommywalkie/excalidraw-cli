@@ -3,7 +3,7 @@
 
 Experimental Excalidraw CLI tool.
 
-Parses Excalidraw JSON schemas (`*.excalidraw`) into PNGs (`*.excalidraw.png`).
+Parses Excalidraw JSON schemas (`*.excalidraw`) into PNGs (`*.png`).
 
 This project is a follow-up to [excalidraw#1261](https://github.com/excalidraw/excalidraw/issues/1261) and strives to provide a CLI for **[excalidraw](https://github.com/excalidraw/excalidraw)**.
 
@@ -79,7 +79,7 @@ node ./bin/run           # Run with Node
 npm run excalidraw-cli   # Run with NPM script
 ```
 
-Launch Jest tests.
+Prepack and launch Jest tests.
 
 ```sh
 npm run test

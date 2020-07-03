@@ -86,14 +86,19 @@ export const computeUserInputs = async ({ args, flags }) => {
     if (args.input) {
         const inputLstat = await getStatsFromPathThatShouldExist(args.input)
         if (inputLstat && inputLstat.isDirectory()) {
-            const excalidrawFiles = await retrieveExcalidrawFilesFromDirectory(args.input)
-            if (excalidrawFiles) {
-                if (excalidrawFiles.length == 0)
-                    console.error(`Input directory <${args.input}> has no '*.excalidraw' files.`)
-                const tasks = generateTaskListFromFiles(excalidrawFiles, args.input, args.output, quiet)
-                tasks.run().catch(err => {
-                    console.error(err)
-                })
+            const outputPathExt = path.extname(args.output)
+            if (outputPathExt.length > 0)
+                console.error(`Cannot process the request.\nYou passed a folder (${chalk.yellow(args.input)}) as input, and a single file (${chalk.yellow(args.output)}) as output.`)
+            else {
+                const excalidrawFiles = await retrieveExcalidrawFilesFromDirectory(args.input)
+                if (excalidrawFiles) {
+                    if (excalidrawFiles.length == 0)
+                        console.error(`Input directory <${args.input}> has no '*.excalidraw' files.`)
+                    const tasks = generateTaskListFromFiles(excalidrawFiles, args.input, args.output, quiet)
+                    tasks.run().catch(err => {
+                        console.error(err)
+                    })
+                }
             }
         }
         else if (inputLstat && inputLstat.isFile()) {

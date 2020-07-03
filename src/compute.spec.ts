@@ -1,11 +1,10 @@
-import { retrieveDataFromExcalidraw, readdirRecursive } from './compute'
-import * as path from 'path'
+import { retrieveDataFromExcalidraw, retrieveExcalidrawFilesFrom } from './compute'
 
 describe("Detecting Excalidraw files", () => {
     test('should be able to retrieve 8 Excalidraw files inside test/', async () => {
-        const files = readdirRecursive('./test/')
-        const excalidrawFiles = files.filter((el: string) => path.extname(el) === '.excalidraw')
-        expect(excalidrawFiles.length).toBe(8)
+        const excalidrawFiles = await retrieveExcalidrawFilesFrom('test')
+        if (excalidrawFiles)
+            expect(excalidrawFiles.length).toBe(8)
     })
 })
 

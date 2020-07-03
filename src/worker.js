@@ -1,13 +1,13 @@
-import * as Listr from 'listr'
+import Listr from 'listr'
 import { Observable } from 'rxjs'
 import { generateCanvasAndSaveAsPng } from './compute'
 
 const generateTaskFromFile = (file, inputPath, outputPath) => {
     return {
-        title: file.split('\\').pop().split('/').pop(),
+        title: file,
         task: (_, task) => new Observable(observer => {
             observer.next('Processing data...')
-            const _ = generateCanvasAndSaveAsPng((inputPath ? inputPath + '/' : '') + file, outputPath, observer, task)
+            const _ = generateCanvasAndSaveAsPng((inputPath ? inputPath + '/' : '') + file, inputPath, outputPath, observer, task)
         })
     }
 }

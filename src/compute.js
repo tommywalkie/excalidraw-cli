@@ -1,4 +1,4 @@
-import * as chalk from 'chalk'
+import chalk from 'chalk'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import { convertExcalidrawToCanvas } from './renderer'
@@ -15,7 +15,7 @@ const getStatsFromPathThatShouldExist = async path => {
     }
 }
 
-const saveCanvasAsPng = async (canvas, pathArg, inputFile, observer, task) => {
+const saveCanvasAsPng = async (canvas, pathArg, inputPath, inputFile, observer, task) => {
     try {
         const stream = canvas.createPNGStream()
         const outputPathExt = path.extname(pathArg)
@@ -27,11 +27,12 @@ const saveCanvasAsPng = async (canvas, pathArg, inputFile, observer, task) => {
             if (observer) observer.complete()
             if (task) task.title = `${task.title} ${chalk.grey('=>')} ${chalk.yellow(outputFilePath)}`
         } else {
-            fs.mkdir(pathArg, { recursive: true }, (err) => {
+            const inputFileExt = path.extname(inputFile);
+            const outputFile = path.basename(inputFile,inputFileExt)
+            const inputFileParentPath = path.dirname(inputFile)
+            fs.mkdir(path.join(pathArg, inputFileParentPath.substring(inputPath.length)), { recursive: true }, (err) => {
                 if (err) throw err;
-                const inputFileExt = path.extname(inputFile);
-                const outputFile = path.basename(inputFile,inputFileExt)
-                let outputFilePath = path.join(pathArg, outputFile + '.png')
+                let outputFilePath = path.join(pathArg, inputFileParentPath.substring(inputPath.length), outputFile + '.png')
                 let out = fs.createWriteStream(outputFilePath)
                 stream.pipe(out)
                 if (observer) observer.complete()
@@ -43,7 +44,7 @@ const saveCanvasAsPng = async (canvas, pathArg, inputFile, observer, task) => {
     }
 }
 
-export const generateCanvasAndSaveAsPng = async (inputArg, outputArg, observer, task) => {
+export const generateCanvasAndSaveAsPng = async (inputArg, inputPath, outputArg, observer, task) => {
     try {
         const inputData = await retrieveDataFromExcalidraw(inputArg)
         if (inputData) {
@@ -51,7 +52,7 @@ export const generateCanvasAndSaveAsPng = async (inputArg, outputArg, observer, 
             if (generatedCanvas) {
                 if (observer)
                     observer.next('Generated canvas, saving it as PNG...')
-                saveCanvasAsPng(generatedCanvas, outputArg, inputArg, observer, task)
+                saveCanvasAsPng(generatedCanvas, outputArg, inputPath, inputArg, observer, task)
             }
         }
     } catch (error) {
@@ -69,11 +70,11 @@ export const retrieveDataFromExcalidraw = async path => {
     }
 }
 
-export const retrieveExcalidrawFilesFromDirectory = async path => {
+export const retrieveExcalidrawFilesFrom = async inputPath => {
     try {
-        const files = await fs.readdir((path == process.cwd() ? './' : path))
+        const files = await readdirRecursive(inputPath, _ => _)
         if (files)
-            return files.filter(file => file.match(/\.excalidraw$/) !== null)
+            return files.filter(el => path.extname(el) === '.excalidraw')
     } catch (error) {
         console.error('Some error occured when trying to analyze <' + path + '> directory. Cannot process request.')
         console.error(error)
@@ -91,10 +92,10 @@ export const computeUserInputs = async ({ args, flags }) => {
             if (outputPathExt.length > 0)
                 console.error(`Cannot process the request.\nYou passed a folder (${chalk.yellow(args.input)}) as input, and a single file (${chalk.yellow(args.output)}) as output.`)
             else {
-                const excalidrawFiles = await retrieveExcalidrawFilesFromDirectory(args.input)
+                const excalidrawFiles = await retrieveExcalidrawFilesFrom(args.input)
                 if (excalidrawFiles) {
                     if (excalidrawFiles.length == 0)
-                        console.error(`Input directory <${args.input}> has no '*.excalidraw' files.`)
+                        console.error(`Input directory <${chalk.yellow(args.input)}> has no '*.excalidraw' files.`)
                     const tasks = generateTaskListFromFiles(excalidrawFiles, args.input, args.output, quiet)
                     tasks.run().catch(err => {
                         console.error(err)

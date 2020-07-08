@@ -2,8 +2,18 @@ FROM node:alpine
 
 RUN apk update
 RUN apk add --no-cache \
-    build-base cairo-dev cairo cairo-tools \
-    python pangocairo
+    python \
+    g++ \
+    build-base \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    musl-dev \
+    giflib-dev \
+    pixman-dev \
+    pangomm-dev \
+    libjpeg-turbo-dev \
+    freetype-dev
 
 USER node
 RUN mkdir -p /home/node/app

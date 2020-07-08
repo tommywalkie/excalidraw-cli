@@ -1,3 +1,6 @@
+# This Dockerfile is meant for making sure dependencies, like node-canvas,
+# which depends on Cairo, are OK on Alpine Linux.
+# Usually, node-canvas works out-of-the-box for macOS, Ubuntu and Windows.
 FROM node:alpine
 
 RUN apk update

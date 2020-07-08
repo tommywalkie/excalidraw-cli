@@ -1,7 +1,9 @@
 FROM node:alpine
 
 RUN apk update
-RUN apk add -u build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+RUN apk add --no-cache \
+    build-base cairo-dev cairo cairo-tools \
+    python
 
 USER node
 RUN mkdir -p /home/node/app

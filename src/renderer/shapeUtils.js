@@ -1,5 +1,13 @@
 export const getCircumferenceFromRectangle = el => 2 * (el.height + el.width)
 
+export const getDimensionsFromRotatedRegularShape = el => {
+    const theta = el.angle
+    return [
+        Math.sin(theta) * el.height + Math.cos(theta) * el.width,
+	    Math.sin(theta) * el.width + Math.cos(theta) * el.height
+    ]
+}
+
 export const getCentroid = arr => {
     var x = arr.map(xy => xy[0])
     var y = arr.map(xy => xy[1])

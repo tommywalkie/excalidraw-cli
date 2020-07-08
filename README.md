@@ -14,17 +14,17 @@ _Demo_ ⤴️
 ## Install
 
 ```bash
-npm install -g @tommywalkie/excalidraw-cli           # Install globally
-npm install --save-dev @tommywalkie/excalidraw-cli   # ... Or as a dev dependency
+npm install -g @tommywalkie/excalidraw-cli
 ```
 
 #### Alpine
 
 If using Alpine (e.g. for Docker stuff), install the following packages.
 
-```sh
-apk update
-apk add --no-cache python g++ build-base cairo-dev jpeg-dev pango-dev \
+```dockerfile
+FROM node:alpine
+RUN apk update
+RUN apk add --no-cache python g++ build-base cairo-dev jpeg-dev pango-dev \
     musl-dev giflib-dev pixman-dev pangomm-dev libjpeg-turbo-dev freetype-dev
 ```
 

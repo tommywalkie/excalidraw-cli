@@ -18,6 +18,6 @@ export const generateTaskListFromFiles = (files, inputPath, outputPath, quiet) =
 }
 
 export const generateTaskListFromFile = (file, outputPath, quiet) => {
-    const tasks = generateTaskFromFile(file, null, outputPath)
+    const tasks = generateTaskFromFile(file, '', outputPath)
     return new Listr([tasks], { renderer: quiet ? 'silent' : 'default' })
 }

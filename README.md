@@ -55,21 +55,9 @@ Hopefully, `excalidraw-cli` will directly use Excalidraw renderer methods for co
 
 See the related issue thread [excalidraw#1780](https://github.com/excalidraw/excalidraw/issues/1780).
 
-#### Caveats
-
-The currently used home-made renderer now supports any Excalidraw shape element but it's not perfect, there are still a few known issues :
-- Rotated objects may exceed canvas dimensions if too close of one side
-- Font ligatures are not supported yet
-
 ## Contributing
 
 > **Note**: Most of the codebase is currently in **ES2017**, it will soon be converted to **TypeScript** for educational purposes, but also for easier integration with Excalidraw.
-
-Fork the repo and clone it on your machine.
-
-```sh
-git clone https://github.com/<MY-USERNAME>/excalidraw-cli.git
-```
 
 Install dependencies with `npm` or `yarn`.
 
@@ -83,7 +71,7 @@ Export fonts, transpile **TypeScript** / **ES2017** source into **CommonJS** for
 npm run prepack
 ```
 
-Start using the CLI in production. 
+Test the CLI with the transpiled source code. 
 
 ```sh
 node ./bin/run           # Run with Node

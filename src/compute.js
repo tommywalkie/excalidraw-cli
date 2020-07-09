@@ -20,7 +20,7 @@ const saveCanvasAsPng = async (canvas, pathArg, inputPath, inputFile, observer, 
         const stream = canvas.createPNGStream()
         const outputPathExt = path.extname(pathArg)
         const outputFileName = path.basename(pathArg, outputPathExt)
-        if (outputPathExt.length > 0) {
+        if (outputPathExt && outputPathExt.length > 0) {
             let outputFilePath = path.join(path.dirname(pathArg), outputFileName + '.png')
             let out = fs.createWriteStream(outputFilePath)
             stream.pipe(out)

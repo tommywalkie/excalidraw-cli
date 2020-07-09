@@ -1,10 +1,10 @@
 import { retrieveDataFromExcalidraw, retrieveExcalidrawFilesFrom } from './compute'
 
 describe("Detecting Excalidraw files", () => {
-    test('should be able to retrieve 8 Excalidraw files inside test/', async () => {
+    test('should be able to retrieve 9 Excalidraw files inside test/', async () => {
         const excalidrawFiles = await retrieveExcalidrawFilesFrom('test')
         if (excalidrawFiles)
-            expect(excalidrawFiles.length).toBe(8)
+            expect(excalidrawFiles.length).toBe(9)
     })
 })
 

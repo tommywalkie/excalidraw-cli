@@ -1,7 +1,9 @@
+// Keeping this unused math function, in case of.
 export const getCircumferenceFromRectangle = el => 2 * (el.height + el.width)
 
+// Keeping this unused math function, in case of.
 export const getDimensionsFromRotatedRegularShape = el => {
-    const theta = el.angle
+    const theta = el.angle * Math.PI / 180
     return [
         Math.sin(theta) * el.height + Math.cos(theta) * el.width,
 	    Math.sin(theta) * el.width + Math.cos(theta) * el.height

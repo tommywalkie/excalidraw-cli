@@ -9,44 +9,67 @@ import { renderEllipse } from './ellipse'
 import { renderText } from './text'
 import { renderDiamond } from './diamond'
 
+import { getCentroidFromRegularShape, rotate } from './shapeUtils'
+
 const getDimensionsFromExcalidraw = json => {
-    let maxWidth = 200
-    let maxHeight = 200
+    const defaultMargin = 10
+    let maxWidth = 100
+    let maxHeight = 100
     let negativeWidth = 0
     let negativeHeight = 0
     let minX, minY
     if (json && json.elements) {
         json.elements.forEach((el, index) => {
+            const [cx, cy] = getCentroidFromRegularShape(el, negativeHeight, negativeWidth)
+            const [topXr, topYr] = rotate(cx, cy, el.x + negativeWidth, el.y + negativeHeight, el.angle)
+            const [rightXr, rightYr] = rotate(cx, cy, el.x + el.width + negativeWidth, el.y + negativeHeight, el.angle)
+            const [bottomXr, bottomYr] = rotate(cx, cy, el.x + el.width + negativeWidth, el.y + el.height + negativeHeight, el.angle)
+            const [leftXr, leftYr] = rotate(cx, cy, el.x + negativeWidth, el.y + el.height + negativeHeight, el.angle)
+            const [finalX, finalY] = [
+                Math.min(topXr, rightXr, bottomXr, leftXr),
+                Math.min(topYr, rightYr, bottomYr, leftYr)
+            ]
             if (index == 0) {
-                minX = el.x
-                minY = el.y
+                minX = finalX
+                minY = finalY
             }
-            if (el.x < negativeWidth)
-                negativeWidth = el.x
-            if (el.y < negativeHeight)
-                negativeHeight = el.y
-            if (el.x < minX)
-                minX = el.x
-            if (el.y < minY)
-                minY = el.y
+            else {
+                if (finalX < negativeWidth)
+                    negativeWidth = finalX
+                if (finalY < negativeHeight)
+                    negativeHeight = finalY
+                if (finalX < minX)
+                    minX = finalX
+                if (finalY < minY)
+                    minY = finalY
+            }
         })
         if (negativeWidth >= 0)
             negativeWidth = minX
         if (negativeHeight >= 0)
             negativeHeight = minY
-        negativeWidth = negativeWidth - 50
-        negativeHeight = negativeHeight - 50
+        negativeWidth = negativeWidth - defaultMargin
+        negativeHeight = negativeHeight - defaultMargin
         json.elements.forEach(el => {
-            if (el.x + el.width + (0 - negativeWidth) > maxWidth)
-                maxWidth = Number(el.x + el.width + (0 - negativeWidth))
-            if (el.y + el.height + (0 - negativeHeight) > maxHeight)
-                maxHeight = Number(el.y + el.height + (0 - negativeHeight))
+            const [cx, cy] = getCentroidFromRegularShape(el, negativeHeight, negativeWidth)
+            const [topXr, topYr] = rotate(cx, cy, el.x + negativeWidth, el.y + negativeHeight, el.angle)
+            const [rightXr, rightYr] = rotate(cx, cy, el.x + el.width + negativeWidth, el.y + negativeHeight, el.angle)
+            const [bottomXr, bottomYr] = rotate(cx, cy, el.x + el.width + negativeWidth, el.y + el.height + negativeHeight, el.angle)
+            const [leftXr, leftYr] = rotate(cx, cy, el.x + negativeWidth, el.y + el.height + negativeHeight, el.angle)
+            const [maxX, maxY] = [
+                Math.max(topXr, rightXr, bottomXr, leftXr),
+                Math.max(topYr, rightYr, bottomYr, leftYr)
+            ]
+            if (maxX + (0 - negativeWidth) > maxWidth)
+                maxWidth = Number(maxX + (0 - negativeWidth))
+            if (maxY + (0 - negativeHeight) > maxHeight)
+                maxHeight = Number(maxY + (0 - negativeHeight))
         })
-        maxWidth = maxWidth + 50
-        maxHeight = maxHeight + 50
+        maxWidth = maxWidth + defaultMargin
+        maxHeight = maxHeight + defaultMargin
     }
     return {
-        maxDimensions: [maxWidth, maxHeight],
+        maxDimensions: [maxWidth-negativeWidth, maxHeight-negativeHeight],
         negativeDimensions: [negativeWidth, negativeHeight]
     }
 }

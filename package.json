@@ -16,10 +16,12 @@
     "canvas": "^2.6.1",
     "chalk": "^4.0.0",
     "cpy-cli": "^3.1.1",
+    "crypto-js": "^4.0.0",
     "fs-extra": "^9.0.1",
     "fs-readdir-recursive": "^1.1.0",
     "listr": "^0.14.3",
     "listr2": "^2.1.9",
+    "node-fetch": "^2.6.0",
     "roughjs": "^4.3.1",
     "rxjs": "^6.5.5"
   },

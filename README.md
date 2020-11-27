@@ -1,4 +1,5 @@
 # excalidraw-cli
+
 [![npm version](https://img.shields.io/npm/v/@tommywalkie/excalidraw-cli)](https://www.npmjs.com/package/@tommywalkie/excalidraw-cli) [![Bundlephobia badge](https://badgen.net/bundlephobia/min/@tommywalkie/excalidraw-cli)](https://bundlephobia.com/result?p=@tommywalkie/excalidraw-cli@latest) ![build](https://github.com/tommywalkie/excalidraw-cli/workflows/build/badge.svg?branch=master)
 
 Experimental Excalidraw CLI tool.
@@ -17,7 +18,7 @@ _Demo_ ⤴️
 npm install -g @tommywalkie/excalidraw-cli
 ```
 
-#### Alpine
+### Alpine
 
 If using Alpine (e.g. for Docker stuff), install the following packages.
 
@@ -47,7 +48,7 @@ OPTIONS
   -v, --version  show CLI version
 ```
 
-## How it works ?
+## How it works
 
 Currently, [`excalidraw`](https://www.npmjs.com/package/excalidraw) NPM package only exports a React component. `excalidraw-cli` uses **[node-canvas](https://github.com/Automattic/node-canvas)** at its core, this allows to generate canvas without relying on the `window` context, and uses a home-made renderer which tries to _mimic_ Excalidraw's as much as possible, using [**Rough.js**](https://roughjs.com/) API primarily.
 
@@ -71,7 +72,7 @@ Export fonts, transpile **TypeScript** / **ES2017** source into **CommonJS** for
 npm run prepack
 ```
 
-Test the CLI with the transpiled source code. 
+Test the CLI with the transpiled source code.
 
 ```sh
 node ./bin/run           # Run with Node

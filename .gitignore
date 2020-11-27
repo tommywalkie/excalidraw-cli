@@ -85,3 +85,5 @@ yarn-debug.log*
 yarn-error.log*
 yarn.lock
 **/*.png
+
+.DS_Store

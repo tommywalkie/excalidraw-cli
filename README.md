@@ -48,6 +48,31 @@ OPTIONS
   -v, --version  show CLI version
 ```
 
+### Docker
+
+For convenience we have also a Docker image that includes all dependencies out of the box.
+
+#### Build
+
+To build the Docker image run following command.
+
+#### Use
+
+To use the docker image in a convenient way you can add following function to your `.bashrc` or `.zshrc`.
+
+```bash
+function excalidraw-cli {
+  docker run --rm -it -v $PWD:/data excalidraw-cli $@
+}
+```
+
+Then simply reload your terminal to have this function available.
+
+```bash
+$ excalidraw-cli drawings/my-drawing.excalidraw .
+✔ drawings/my-drawing.excalidraw => drawings/my-drawing.png
+```
+
 ## How it works
 
 Currently, [`excalidraw`](https://www.npmjs.com/package/excalidraw) NPM package only exports a React component. `excalidraw-cli` uses **[node-canvas](https://github.com/Automattic/node-canvas)** at its core, this allows to generate canvas without relying on the `window` context, and uses a home-made renderer which tries to _mimic_ Excalidraw's as much as possible, using [**Rough.js**](https://roughjs.com/) API primarily.

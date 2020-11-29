@@ -19,4 +19,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Try to build dummy Alpine Docker image
-      run: docker build -f .github/workflows/Dockerfile .
+      run: docker build -t excalidraw-cli:latest .

@@ -12,19 +12,21 @@ RUN apk add --no-cache \
     pangomm-dev \
     libjpeg-turbo-dev \
     freetype-dev
-RUN mkdir -p /home/app
-WORKDIR /home/app
-COPY package.json .
+
+RUN addgroup -S excalidraw && adduser -S excalidraw -G excalidraw
+USER excalidraw
+WORKDIR /home/excalidraw
+COPY --chown=excalidraw:excalidraw package.json .
 RUN yarn -s
 RUN yarn global add typescript
 
-COPY .npmignore tsconfig.json ./
-COPY bin/ bin
-COPY src/ src
+COPY --chown=excalidraw:excalidraw .npmignore tsconfig.json ./
+COPY --chown=excalidraw:excalidraw bin/ bin
+COPY --chown=excalidraw:excalidraw src/ src
 
 RUN yarn prepack
 
 VOLUME [ "/data" ]
 WORKDIR /data
 
-ENTRYPOINT [ "/home/app/bin/run" ]
+ENTRYPOINT [ "/home/excalidraw/bin/run" ]

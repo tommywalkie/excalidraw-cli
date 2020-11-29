@@ -27,7 +27,7 @@
     "@oclif/dev-cli": "^1",
     "@types/chalk": "^2.2.0",
     "@types/fs-extra": "^9.0.1",
-    "@types/jest": "^25.2.1",
+    "@types/jest": "^26.0.15",
     "globby": "^11.0.1",
     "jest": "^26.1.0",
     "np": "^6.2.5",

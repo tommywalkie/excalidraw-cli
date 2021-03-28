@@ -21,9 +21,8 @@ RUN apk add --no-cache \
 USER excalidraw
 WORKDIR /home/excalidraw
 
-COPY --chown=excalidraw:excalidraw package.json .
-RUN yarn -s
-RUN yarn global add typescript
+COPY --chown=excalidraw:excalidraw package.json yarn.lock ./
+RUN yarn
 
 COPY --chown=excalidraw:excalidraw .npmignore tsconfig.json ./
 COPY --chown=excalidraw:excalidraw bin/ bin
